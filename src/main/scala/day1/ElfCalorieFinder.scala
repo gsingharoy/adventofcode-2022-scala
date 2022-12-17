@@ -1,5 +1,7 @@
 package day1
 
+import scala.annotation.tailrec
+
 object ElfCalorieFinder {
 
 
@@ -13,6 +15,25 @@ object ElfCalorieFinder {
     case _ =>  Some(elves.max)
   }
 
+  /**
+   *
+   * @param elves
+   * @param totalTopElves
+   * @return
+   */
+  def findTopElvesWithCalorificValues(elves: List[Elf], totalTopElves: Int): List[Elf] = {
 
+    @tailrec
+    def f(e: List[Elf], result: List[Elf]): List[Elf] = e match {
+      case Nil => result
+      case head :: tail =>
+        if (result.length < totalTopElves )
+          f(tail, result :+ head)
+        else
+          result
+    }
+
+    f(elves.sortWith(_.totalCalories > _.totalCalories), List.empty)
+  }
 
 }

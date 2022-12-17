@@ -2,7 +2,7 @@ package common
 
 import scala.io.Source
 
-object FileReader {
+object FileUtils {
 
   /**
    * A function to read a file and return a list of string values
