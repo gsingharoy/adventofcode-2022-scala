@@ -1,19 +1,20 @@
-package day1
+package solution
 
 import common.FileUtils
+import day1.{Elf, ElfCalorieFinder}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class SolutionSpec extends AnyFlatSpec with Matchers {
+class SolutionDay1Spec extends AnyFlatSpec with Matchers {
 
-  "ElfCalorieFinder.findElfWithMaxCalories" should "be able to find the maximum calorific value of the elves participating from the input of the question " in {
+  "Solution Day 1: Part one" should "be able to find the maximum calorific value of the elves participating from the input of the question " in {
     val rawCalories = FileUtils.readFile("day1/input")
     val elves: List[Elf] = Elf.constructElves(rawCalories)
 
     ElfCalorieFinder.findElfWithMaxCalories(elves).get.totalCalories shouldBe 68787
   }
 
-  "ElfCalorieFinder.findElfWithMaxCalories" should "be able to find the maximum calorific value of the top 3 elves as part of the bonus question " in {
+  "Solution Day 2: Part 2s" should "be able to find the maximum calorific value of the top 3 elves as part of the bonus question " in {
     val rawCalories = FileUtils.readFile("day1/input")
     val elves: List[Elf] = Elf.constructElves(rawCalories)
 
