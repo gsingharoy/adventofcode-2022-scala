@@ -2,25 +2,14 @@ package day3
 
 import scala.annotation.tailrec
 
-case class Rucksack(firstCompartment: List[Char], secondCompartment: List[Char]) {
+case class Rucksack(firstCompartment: List[Char], secondCompartment: List[Char]) extends Group {
 
   /**
    * Returns items which are present in both the compartments
    */
-  lazy val duplicatedItems: List[Char] = {
-    @tailrec
-    def f(l1: List[Char], result: Set[Char] = Set.empty): Set[Char] = l1 match {
-      case Nil => result
-      case head :: tail => {
-        if (secondCompartment.contains(head))
-         f(tail, result + head)
-        else
-          f(tail, result)
-      }
-    }
+  lazy val duplicatedItems: List[Char] = listMatcher(firstCompartment, List(secondCompartment))
 
-    f(firstCompartment).toList
-  }
+  lazy val allItems: List[Char] = firstCompartment ++ secondCompartment
 }
 
 object  Rucksack {
