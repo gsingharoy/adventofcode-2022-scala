@@ -17,7 +17,7 @@ case class CrateStack(id: Int, crates: List[Char]) extends Ordered[CrateStack] {
    * @return (List[Char], CrateStack) which is a tuple of the crates removed in the order they are supposed to be moved.
    *         The 2nd tuple, which is the CrateStack represents the left state of the Crate
    */
-  def removeItems(totalItems: Int): (List[Char], CrateStack) = {
+  def removeItems(totalItems: Int, with9001: Boolean = false): (List[Char], CrateStack) = {
 
     @tailrec
     def f(items: List[Char], itemsLeft: Int, result: List[Char] = List.empty): (List[Char], CrateStack) =
@@ -29,7 +29,10 @@ case class CrateStack(id: Int, crates: List[Char]) extends Ordered[CrateStack] {
           case head :: tail => f(tail, itemsLeft - 1, result :+ head)
         }
 
-    f(crates, totalItems)
+    val (resultCrates, resultStack) = f(crates, totalItems)
+    if(with9001) (resultCrates.reverse, resultStack)
+    else (resultCrates, resultStack)
+
   }
 
 
@@ -40,8 +43,12 @@ case class CrateStack(id: Int, crates: List[Char]) extends Ordered[CrateStack] {
    * @param items
    * @return
    */
-  def addItems(items: List[Char]): CrateStack =
-    copy(crates = items.reverse ++ this.crates)
+  def addItems(items: List[Char], with9001: Boolean = false): CrateStack = {
+    if (with9001)
+      copy(crates = items ++ this.crates)
+    else
+      copy(crates = items.reverse ++ this.crates)
+  }
 
 
   lazy val topItem: Option[Char] = crates.headOption

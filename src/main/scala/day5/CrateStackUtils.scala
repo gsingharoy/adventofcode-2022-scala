@@ -10,11 +10,11 @@ object CrateStackUtils {
    * @param crateStacks
    * @return
    */
-  def moveItems(move: MoveAction, crateStacks: List[CrateStack]): Option[List[CrateStack]] = {
+  def moveItems(move: MoveAction, crateStacks: List[CrateStack], with9001: Boolean = false): Option[List[CrateStack]] = {
     (crateStacks.find(_.id == move.sourceStack), crateStacks.find(_.id == move.sinkStack)) match {
       case (Some(sourceCrate), Some(sinkCrate)) => {
         val (itemsToRemove, newSourceCrate) = sourceCrate.removeItems(move.moveUnits)
-        val newSinkCrate = sinkCrate.addItems(itemsToRemove)
+        val newSinkCrate = sinkCrate.addItems(itemsToRemove, with9001)
         val newStackList = crateStacks.filter(cs => cs.id != move.sinkStack && cs.id != move.sourceStack)
         Some(newStackList ++ List(newSinkCrate, newSourceCrate))
       }
@@ -22,12 +22,12 @@ object CrateStackUtils {
     }
   }
 
-  def makeMoves(movesList: List[MoveAction], crateStacks: List[CrateStack]): (Int, List[CrateStack]) = {
+  def makeMoves(movesList: List[MoveAction], crateStacks: List[CrateStack], with9001: Boolean = false): (Int, List[CrateStack]) = {
 
     @tailrec
     def f(m: List[MoveAction], cs: List[CrateStack], resultSuccess: Int): (Int, List[CrateStack]) = m match {
       case Nil => (resultSuccess, cs.sorted)
-      case head :: tail => moveItems(head, cs) match {
+      case head :: tail => moveItems(head, cs, with9001) match {
         case Some(c) => f(tail, c, resultSuccess + 1)
         case None => f(tail, cs, resultSuccess)
       }
