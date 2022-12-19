@@ -11,4 +11,10 @@ class SolutionDay6Spec extends AnyFlatSpec with Matchers {
 
     Device(code).startOfMarker shouldBe Some(1953)
   }
+
+  "Day 6 : Part two" should "be able to find the start of the marker" in {
+    val code: String = FileUtils.readFile("day6/input").head
+
+    Device(code, 14).startOfMarker shouldBe Some(2301)
+  }
 }
