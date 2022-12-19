@@ -37,4 +37,24 @@ class AssignmentSpec extends AnyFlatSpec with Matchers {
     }
 
   }
+
+  "Assignment#hasPartialOverlaps" should "return true for the cases where there are overlaps in some of the work" in {
+
+    val rawStrings: List[String] = List[String]("5-7,7-9", "2-8,3-7", "6-6,4-6", "2-6,4-8")
+    for (str <- rawStrings) {
+      val ass = Assignment.constructFromString(str).get
+      ass.hasPartialOverlap shouldEqual true
+    }
+
+  }
+
+  "Assignment#hasPartialOverlaps" should "return false for the cases where there are NO overlaps" in {
+
+    val rawStrings: List[String] = List[String]("2-4,6-8", "2-3,4-5")
+    for (str <- rawStrings) {
+      val ass = Assignment.constructFromString(str).get
+      ass.hasPartialOverlap shouldEqual false
+    }
+
+  }
 }

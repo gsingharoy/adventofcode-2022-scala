@@ -21,6 +21,22 @@ case class Assignment(elf1Shelves: List[Int], elf2Shelves: List[Int]){
 
     f(elf1Shelves, elf2Shelves) || f(elf2Shelves,elf1Shelves)
   }
+
+  /**
+   * Returns true if there is some work where there are overlaps
+   */
+  lazy val hasPartialOverlap: Boolean = {
+
+    @tailrec
+    def f(l: List[Int], matchingList: List[Int], result: Boolean = false): Boolean = l match {
+      case Nil => result
+      case head :: tail =>
+        if (matchingList.contains(head)) true
+        else f(tail, matchingList, result)
+    }
+
+    f(elf1Shelves, elf2Shelves) || f(elf2Shelves, elf1Shelves)
+  }
 }
 
 object Assignment {
