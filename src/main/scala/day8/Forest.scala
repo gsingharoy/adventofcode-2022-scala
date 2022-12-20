@@ -41,17 +41,64 @@ case class Forest(trees: List[Tree]) {
    */
   def isTreeVisibleFromSouth(tl: Tree): Boolean = tl.isVisibleToEdge(findTreesFromSouth(tl))
 
+
+  /**
+   * Find the total number of trees which are visible to the left
+   *
+   * @param tl
+   * @return
+   */
+  def treesvisibleToLeft(tl: Tree): Int = tl.visibleTreesInFront(findTreesFromLeft(tl))
+
+  /**
+   * Find the total number of trees which are visible to the right
+   *
+   * @param tl
+   * @return
+   */
+  def treesvisibleToRight(tl: Tree): Int = tl.visibleTreesInFront(findTreesFromRight(tl))
+
+  /**
+   * Find the total number of trees which are visible from the North
+   * @param tl
+   * @return
+   */
+  def treesvisibleToNorth(tl: Tree): Int = tl.visibleTreesInFront(findTreesFromNorth(tl))
+
+  /**
+   * Find the total number of trees which are visible from the South
+   *
+   * @param tl
+   * @return
+   */
+  def treesvisibleToSouth(tl: Tree): Int = tl.visibleTreesInFront(findTreesFromSouth(tl))
+
+  /**
+   * The higher the scenic score, the better hidden it is.
+   *
+   * @param tl
+   * @return
+   */
+  def scenicScore(tl: Tree): Int = treesvisibleToLeft(tl) *
+    treesvisibleToSouth(tl) *
+    treesvisibleToNorth(tl) *
+    treesvisibleToRight(tl)
+
   def findTreesFromLeft(tl: Tree): List[Tree] =
     trees.filter(t => t.col < tl.col && t.row == tl.row)
+      .sortWith(_.col < _.col)
 
   private def findTreesFromRight(tl: Tree): List[Tree] =
     trees.filter(t => t.col > tl.col && t.row == tl.row)
+      .sortWith(_.col > _.col)
 
   private def findTreesFromNorth(tl: Tree): List[Tree] =
     trees.filter(t => t.col == tl.col && t.row < tl.row)
+      .sortWith(_.row < _.row)
 
   private def findTreesFromSouth(tl: Tree): List[Tree] =
     trees.filter(t => t.col == tl.col && t.row > tl.row)
+      .sortWith(_.row > _.row)
 }
 
 object Forest {

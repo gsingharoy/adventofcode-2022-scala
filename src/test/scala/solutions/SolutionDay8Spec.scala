@@ -12,4 +12,10 @@ class SolutionDay8Spec extends AnyFlatSpec with Matchers {
 
     Solution.part1(args) shouldBe 1700
   }
+
+  "Day 8: Part two" should "be able to return the tree with the highest scenic score" in {
+    val args = FileUtils.readFile("day8/input")
+
+    Solution.part2(args) shouldBe 470596
+  }
 }

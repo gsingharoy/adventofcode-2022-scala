@@ -49,4 +49,24 @@ class ForestSpec extends AnyFlatSpec with Matchers  {
     forest.isTreeVisibleFromSouth(t12) shouldBe false
     forest.isTreeVisibleFromRight(t12) shouldBe true
   }
+
+  "Forest#scenicScore" should "return the correct scenic score from the example" in {
+    val args = FileUtils.readFile("day8/sample")
+
+    val forest = Forest.constructFromStrings(args)
+
+
+    val t12: Tree = forest.trees.find(t => t.col == 2 && t.row == 1).get
+
+    forest.scenicScore(t12) shouldBe 4
+    forest.treesvisibleToSouth(t12) shouldBe 2
+    forest.treesvisibleToNorth(t12) shouldBe 1
+    forest.treesvisibleToRight(t12) shouldBe 2
+    forest.treesvisibleToLeft(t12) shouldBe 1
+
+    val t32: Tree = forest.trees.find(t => t.col == 2 && t.row == 3).get
+
+    forest.scenicScore(t32) shouldBe 8
+
+  }
 }
