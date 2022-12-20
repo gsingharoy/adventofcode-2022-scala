@@ -1,5 +1,7 @@
 # Advent of code 2022 : Scala
 
+[![Build Status](https://app.travis-ci.com/gsingharoy/adventofcode-2022-scala.svg?branch=main)](https://app.travis-ci.com/gsingharoy/adventofcode-2022-scala)
+
 Code samples for problems from [Advent of Code 2022](https://adventofcode.com/2022/) written in scala. In this repository you will find one kind of implementations of the parts of the solutions for the 50 problems (25 x 2) available from the advent of code 2022 challenge. Most of the solutions are written with more functional practices from scala, which means no mutations and for loops are avoided. 
 
 ## How to find the solutions 
