@@ -7,6 +7,8 @@ trait OSFile {
 
   def fullName: String =  s"${path.path}${name}"
 
+  def isInRoot: Boolean = path.path == "/"
+
   def isInPath(rootPath: OSPath): Boolean = rootPath.path.length <= path.path.length &&
     path.path.substring(0, rootPath.path.length) == rootPath.path
 }

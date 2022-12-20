@@ -36,11 +36,15 @@ object CommandUtils {
     @tailrec
     def constructFiles(currPath: OSPath,
                        commands: List[String],
-                       result: List[OSFile] = List.empty): (List[String], List[OSFile]) = commands match {
-      case Nil => (List.empty, result)
-      case head :: tail if (isExecutableCommand(head)) => (head :: tail, result) // start of new commands and end of directory structure
-      case head :: tail => OSFile.constructFromString(currPath, head) match {
-        case Some(file) => constructFiles(currPath, tail, result :+ file)
+                       result: List[OSFile] = List.empty): (List[String], List[OSFile]) = {
+      commands match {
+        case Nil => (List.empty, result)
+        case head :: tail if (isExecutableCommand(head)) => (head :: tail, result) // start of new commands and end of directory structure
+        case head :: tail => OSFile.constructFromString(currPath, head) match {
+          case Some(file) => {
+            constructFiles(currPath, tail, result :+ file)
+          }
+        }
       }
     }
 
@@ -49,8 +53,7 @@ object CommandUtils {
                         commands: List[String],
                         result: List[OSFile] = List.empty): List[OSFile] = commands match {
       case Nil => result
-      case head :: tail => {
-        ShellCommand.constructFromString(head) match {
+      case head :: tail => ShellCommand.constructFromString(head) match {
           case Some(c) => c match {
             case _: ListDirectory => {
               // execute a listing of directory to find all the files in the directory
@@ -61,7 +64,6 @@ object CommandUtils {
           }
           case None => executeCommands(currPath, tail, result)
         }
-      }
     }
 
     executeCommands("/", strCommands)

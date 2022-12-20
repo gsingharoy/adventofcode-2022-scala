@@ -21,4 +21,22 @@ class CommandUtilsSpec extends AnyFlatSpec with Matchers {
 
     CommandUtils.directoriesWithSizes(allFiles).filter(_._1 <= 100000).map(_._1).sum shouldEqual(95437)
   }
+
+  "CommandUtils.constructDirectoryList" should "be able to construct successfully all files and directories" in {
+    val strCommands = FileUtils.readFile("day7/sample2")
+    val allFiles = CommandUtils.constructDirectoryList(strCommands)
+    val allDataFiles: List[DataFile] = allFiles.flatMap({
+      case d:DataFile => Some(d)
+      case _ => None
+    })
+    val allDirectoryFiles: List[Directory] = allFiles.flatMap({
+      case d: Directory => Some(d)
+      case _ => None
+    })
+
+    allDataFiles.find(_.fullName == "/d/lala/jaja/k").map(_.size) shouldEqual Some(1000)
+    allDirectoryFiles.count(_.fullName == "/d/lala/jaja") shouldEqual 1
+
+
+  }
 }
