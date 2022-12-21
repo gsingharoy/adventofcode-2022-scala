@@ -13,12 +13,11 @@ object Move {
         .map(i=> Range.inclusive(1, i).toList.map(_ => move))
         .getOrElse(List[T]())
 
-    str.split(" ").toList match {
-      case l if l.length != 2 => List.empty
-      case head1 :: head2 :: _ if head1 == "R" => buildMoves[MoveRight](head2, MoveRight())
-      case head1 :: head2 :: _ if head1 == "U" => buildMoves[MoveUp](head2, MoveUp())
-      case head1 :: head2 :: _ if head1 == "D" => buildMoves[MoveDown](head2, MoveDown())
-      case head1 :: head2 :: _ if head1 == "L" => buildMoves[MoveLeft](head2, MoveLeft())
+    str match {
+      case s"R ${u}" => buildMoves[MoveRight](u, MoveRight())
+      case s"U ${u}" => buildMoves[MoveUp](u, MoveUp())
+      case s"D ${u}" => buildMoves[MoveDown](u, MoveDown())
+      case s"L ${u}" => buildMoves[MoveLeft](u, MoveLeft())
       case _ => List.empty
     }
   }
