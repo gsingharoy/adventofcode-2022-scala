@@ -17,12 +17,11 @@ object MoveAction {
    *
    * @return
    */
-  def constructFromString(str: String): Option[MoveAction] = str.split(" ").toList match {
-    case l if l.length != 6 => None // ill formed input
-    case _ :: u :: _ :: so :: _ :: si :: _ =>
-      (so.toIntOption, si.toIntOption, u.toIntOption) match {
+  def constructFromString(str: String): Option[MoveAction] = str match {
+    case s"move ${u} from ${so} to ${si}" => (so.toIntOption, si.toIntOption, u.toIntOption) match {
         case (Some(source), Some(sink), Some(units)) => Some(MoveAction(sourceStack = source, sinkStack = sink, moveUnits = units))
         case _ => None
       }
+    case _ => None
   }
 }
