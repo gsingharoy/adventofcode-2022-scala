@@ -30,8 +30,10 @@ object Head {
   lazy val StartPosition: Head = Head(Position(0, 0))
 }
 
-case class Tail(pos: Position) extends Knot[Tail] {
+case class Tail(pos: Position, id: Int = -1) extends Knot[Tail] {
   override def move(move: Move): Tail = this.copy(newPosition(move))
+
+  def toHead: Head = Head(this.pos)
 }
 
 object Tail {
@@ -43,8 +45,13 @@ case class RopeBridge (moves: List[MoveHistory]) {
 
   lazy val head: Head = moves.lastOption.map(_.head).getOrElse(Head.StartPosition)
 
-  lazy val tail: Tail = moves.lastOption.map(_.tail).getOrElse(Tail.StartPosition)
+  lazy val tails: List[Tail] = moves.lastOption.map(_.tails).getOrElse(List(Tail.StartPosition))
 
-  lazy val uniqueTailPositions: Int = moves.map(_.tail.pos).distinct.length
+  lazy val uniqueTailPositions: Int = {
+
+    val tailId: Int = moves.flatMap(_.tails.map(_.id)).distinct.sorted.lastOption.getOrElse(-1)
+    moves.flatMap(_.tails).filter(_.id == tailId).map(_.pos).distinct.length
+  }
+
 }
 

@@ -13,5 +13,14 @@ object Solution extends AdventProblemSolution[Int, Int] {
     rb.uniqueTailPositions
   }
 
-  override def part2(args: List[String]): Int = ???
+  override def part2(args: List[String]): Int = {
+
+    // Build all the moves
+    val moves: List[Move] = Move.fromStrings(args)
+
+    val rb: RopeBridge = RopeBridgeUtils
+      .makeMoves(moves, Head.StartPosition, Range.inclusive(1,9).toList.map( i=> Tail.StartPosition.copy(id = i))) // initialize a list of tails before making moves
+
+    rb.uniqueTailPositions
+  }
 }

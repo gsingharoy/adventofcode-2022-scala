@@ -11,4 +11,10 @@ class SolutionDay9Spec extends AnyFlatSpec with Matchers {
 
    Solution.part1(args) shouldBe 6044
  }
+
+  "Day 9 : Part two" should "be able to find the total unique tail positions of the last item in the tail" in {
+    val args = FileUtils.readFile("day9/input")
+
+    Solution.part2(args) shouldBe 2384
+  }
 }

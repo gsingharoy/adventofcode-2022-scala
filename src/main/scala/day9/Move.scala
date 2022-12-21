@@ -43,4 +43,4 @@ case class MoveDiagonalLeftUp() extends Move
 case class MoveDiagonalLeftDown() extends Move
 
 
-case class MoveHistory(head: Head, tail: Tail)
+case class MoveHistory(head: Head, tails: List[Tail])

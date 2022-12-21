@@ -82,4 +82,15 @@ class RopeBridgeUtilsSpec  extends AnyFlatSpec with Matchers {
 
     rb.uniqueTailPositions shouldBe 13
   }
+
+  "RopeBridgeUtils.makeMoves" should "be able to make the moves from the 2nd sample in the question" in {
+    val args = FileUtils.readFile("day9/sample2")
+
+    val moves: List[Move] = Move.fromStrings(args)
+
+    val rb: RopeBridge = RopeBridgeUtils
+      .makeMoves(moves, Head.StartPosition, Range.inclusive(1,9).toList.map( i=> Tail.StartPosition.copy(id = i)))
+
+    rb.uniqueTailPositions shouldBe 36
+  }
 }

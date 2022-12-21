@@ -46,22 +46,31 @@ object RopeBridgeUtils {
 
   def makeMoves(allMoves: List[Move],
                 startHead: Head = Head.StartPosition,
-                startTail: Tail = Tail.StartPosition): RopeBridge = {
+                startTails: List[Tail] = List(Tail.StartPosition)): RopeBridge = {
 
     @tailrec
-    def f(moves: List[Move],
+    def fMoveTails(move: Move, head: Head, tails: List[Tail], result: List[Tail] = List.empty): List[Tail] = tails match {
+      case Nil => result.reverse // the result is reversed to make the algorithm efficient as it is cheaper to append item to the start of a list
+      case tHead :: tTail => {
+        val newTail = adjustTail(tHead, head)
+        fMoveTails(move, newTail.toHead, tTail, newTail :: result)
+      }
+    }
+
+    @tailrec
+    def fMove(moves: List[Move],
           head: Head,
-          tail: Tail,
+          tails: List[Tail],
           result: List[MoveHistory]): List[MoveHistory] = moves match {
       case Nil => result.reverse // the result is reversed to make the algorithm efficient as it is cheaper to append item to the start of a list
       case m :: t => {
         val newHead = head.move(m)
-        val newTail = adjustTail(tail, newHead)
-        f(t, newHead, newTail, MoveHistory(newHead, newTail) :: result)
+        val newTails = fMoveTails(m, newHead, tails)
+        fMove(t, newHead, newTails, MoveHistory(newHead, newTails) :: result)
       }
     }
 
-    RopeBridge(f(allMoves, startHead, startTail, List(MoveHistory(Head.StartPosition, Tail.StartPosition))))
+    RopeBridge(fMove(allMoves, startHead, startTails, List(MoveHistory(startHead, startTails))))
   }
 
 
