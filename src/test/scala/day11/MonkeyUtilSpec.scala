@@ -8,7 +8,7 @@ class MonkeyUtilSpec extends AnyFlatSpec with Matchers {
   "MonkeyUtil.makeMoves" should "be able to make the moves of the monkey" in {
     val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")
 
-    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings)
+    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings(_))
 
     val (resultMoves, resultMonkeys) = MonkeyUtils.makeMoves(monkeys.head, monkeys)
 
@@ -26,7 +26,7 @@ class MonkeyUtilSpec extends AnyFlatSpec with Matchers {
   "MonkeyUtil.completeRound" should "be able to make all the moves in a round for all the monkeys" in {
     val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")
 
-    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings)
+    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings(_))
 
     val resultMonkeys = MonkeyUtils.completeRound(monkeys)
 
@@ -58,7 +58,7 @@ class MonkeyUtilSpec extends AnyFlatSpec with Matchers {
   "MonkeyUtil.completeInspection" should "be able to make all the moves in all the rounds" in {
     val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")
 
-    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings)
+    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings(_))
 
     val resultMonkeys = MonkeyUtils.completeInspections(monkeys, 20)
 
@@ -66,17 +66,36 @@ class MonkeyUtilSpec extends AnyFlatSpec with Matchers {
     resultMonkeys.find(_.id == 1).get.totalItemsInspected shouldEqual 95
     resultMonkeys.find(_.id == 2).get.totalItemsInspected shouldEqual 7
     resultMonkeys.find(_.id == 3).get.totalItemsInspected shouldEqual 105
-
-    resultMonkeys.map(_.totalItemsInspected).sortWith(_ > _) match {
-      case top1 :: top2 :: _ => (top1 * top2) shouldEqual 10605
-    }
   }
 
   "MonkeyUtil.calculateMonkeyBusiness" should "be able to calculate the monkey business successfully" in {
     val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")
 
-    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings)
+    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings(_))
 
     MonkeyUtils.calculateMoneeyBusiness(monkeys, 20) shouldEqual Some(10605)
   }
+
+
+//  "MonkeyUtil.completeInspection" should "be able to make all the moves in all the rounds after removing the worry divider" in {
+//    val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")
+//
+//    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings(_, smartCorrector = true))
+//
+//
+//    val resultMonkeys = MonkeyUtils.completeInspections(monkeys, 1000, smartCorrector = true)
+//
+//    resultMonkeys.find(_.id == 0).get.totalItemsInspected shouldEqual 5204
+//    resultMonkeys.find(_.id == 1).get.totalItemsInspected shouldEqual 4792
+//    resultMonkeys.find(_.id == 2).get.totalItemsInspected shouldEqual 199
+//    resultMonkeys.find(_.id == 3).get.totalItemsInspected shouldEqual 5192
+//  }
+
+//  "MonkeyUtil.calculateMonkeyBusiness" should "be able to calculate the monkey business successfully removing the worry divider" in {
+//    val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")
+//
+//    val monkeys: List[Monkey] = args.flatMap(Monkey.fromStrings(_, 1))
+//
+//    MonkeyUtils.calculateMoneeyBusiness(monkeys, 10000) shouldEqual Some(2713310158L)
+//  }
 }

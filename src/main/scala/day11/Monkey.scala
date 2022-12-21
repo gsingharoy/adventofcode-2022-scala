@@ -13,11 +13,11 @@ import scala.collection.SeqView.Sorted
  * @param test
  */
 case class Monkey(id: Int,
-                  items: List[Int],
+                  items: List[BigInt],
                   operation: MonkeyOperation,
                   test: MonkeyTest,
-                  totalItemsInspected: Int = 0, // total times this particular monkey has inspected an item
-                  worryDivider: Int = 3) {
+                  totalItemsInspected: Long = 0, // total times this particular monkey has inspected an item
+                  smartCorrector: Boolean = false)  {
 
   /**
    * Return a list of ThrowOperations in the order the items are evaluated.
@@ -29,14 +29,21 @@ case class Monkey(id: Int,
    * @param item
    * @return
    */
-  private def move(item: Int): ThrowOperation = {
+  private def move(item: BigInt): ThrowOperation = {
     // First make the calculation to the Operation on the item and then divide it by worryDivider and round to the nearest integer
-    val newWorry = operation.calc(item) / worryDivider
-    if (newWorry % test.divisibleDenominator == 0) {
-      ThrowOperation(monkeyId = test.trueCase, worryItem = newWorry)
-    } else {
-      ThrowOperation(monkeyId = test.falseCase, worryItem = newWorry)
+    val newWorry =  {
+      if (smartCorrector)
+        operation.calc(item)
+      else {
+        // This is the custom corrector logic
+        operation.calc(item) / 3
+      }
     }
+        if (newWorry % test.divisibleDenominator == 0) {
+          ThrowOperation(monkeyId = test.trueCase, worryItem = newWorry)
+        } else {
+          ThrowOperation(monkeyId = test.falseCase, worryItem = newWorry)
+        }
   }
 
   def applyThrowAction(action: ThrowOperation): Monkey = if (action.monkeyId == id) {
@@ -60,15 +67,15 @@ object Monkey extends Ordering[Monkey] {
    * @param strings
    * @return
    */
-  def fromStrings(strings: List[String]): Option[Monkey] = {
+  def fromStrings(strings: List[String], smartCorrector: Boolean = false): Option[Monkey] = {
 
     def monkeyId(str: String): Option[Int] = str match {
       case s"Monkey ${sId}:" => sId.toIntOption
       case _ => None
     }
 
-    def monkeyItems(str: String): List[Int] = str match {
-      case s"Starting items: ${sItems}" => sItems.split(",").toList.map(_.trim).flatMap(_.toIntOption)
+    def monkeyItems(str: String): List[BigInt] = str match {
+      case s"Starting items: ${sItems}" => sItems.split(",").toList.map(_.trim).flatMap(_.toIntOption).map(BigInt(_))
       case _ => List.empty
     }
 
@@ -76,7 +83,9 @@ object Monkey extends Ordering[Monkey] {
       case l if l.length != 6 => None // ill formed strings
       case head :: itemsStr :: opStr :: testStrings =>
         (monkeyId(head), monkeyItems(itemsStr), MonkeyOperation.fromString(opStr), MonkeyTest.fromStrings(testStrings)) match {
-          case (Some(id), items, Some(op), Some(mt)) if items.nonEmpty => Some(Monkey(id, items, op, mt))
+          case (Some(id), items, Some(op), Some(mt)) if items.nonEmpty => Some(
+            Monkey(id = id, items = items, operation = op, test = mt, smartCorrector = smartCorrector, totalItemsInspected = 0)
+          )
           case _ => None // result of an unsuccessful formation of a monkey
         }
     }
@@ -102,7 +111,7 @@ case class MonkeyOperation(sub: OpObject, op: Operator, obj: OpObject) {
    * @param old
    * @return
    */
-  def calc(old: Int): Int = op match {
+  def calc(old: BigInt): BigInt = op match {
     case _: MultiplyOp => sub.o(old) * obj.o(old)
     case _: AddOp => sub.o(old) + obj.o(old)
     case _ => -1 // This is an error case. Ideally it should not exist as op is a typed value and no funny values would be injected
@@ -132,7 +141,7 @@ object Operator {
   }
 }
 
-case class OpObject(o: Int => Int)
+case class OpObject(o: BigInt => BigInt)
 
 object OpObject {
 
@@ -167,5 +176,4 @@ object MonkeyTest {
   }
 }
 
-case class ThrowOperation(monkeyId: Int, worryItem: Int)
-
+case class ThrowOperation(monkeyId: Int, worryItem: BigInt)

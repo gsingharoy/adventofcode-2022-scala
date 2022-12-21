@@ -13,8 +13,8 @@ object MonkeyUtils {
    * @param rounds
    * @return
    */
-  def calculateMoneeyBusiness(allMonkeys: List[Monkey], rounds: Int): Option[Int] =
-    completeInspections(allMonkeys, rounds).map(_.totalItemsInspected).sortWith(_ > _) match {
+  def calculateMoneeyBusiness(allMonkeys: List[Monkey], rounds: Int, smartCorrector: Boolean = false): Option[BigInt] =
+    completeInspections(allMonkeys, rounds, smartCorrector).map(_.totalItemsInspected).sortWith(_ > _) match {
     case l if l.length < 2 => None
     case top1 :: top2 :: _ => Some(top1 * top2)
   }
@@ -22,15 +22,19 @@ object MonkeyUtils {
    * Complete all the inspections
    *
    * @param allMonkeys
-   * @param totalRounds total number of rounds to be playes
+   * @param totalRounds total number of rounds to be played
    * @return
    */
-  def completeInspections(allMonkeys: List[Monkey], totalRounds: Int): List[Monkey] = {
+  def completeInspections(allMonkeys: List[Monkey], totalRounds: Int, smartCorrector: Boolean = false): List[Monkey] = {
 
     @tailrec
     def fMonkey(monkeys: List[Monkey], currRound: Int): List[Monkey] = currRound match {
       case c if (c > totalRounds) => monkeys // reached the end
-      case c => fMonkey(completeRound(monkeys), c + 1)
+      case c => {
+        val nMonkeys = completeRound(monkeys, smartCorrector)
+        println(s"Completed round ${c}...")
+        fMonkey(nMonkeys, c + 1)
+      }
     }
 
     fMonkey(allMonkeys, 1)
@@ -42,14 +46,14 @@ object MonkeyUtils {
    * @param allMonkeys
    * @return
    */
-  def completeRound(allMonkeys: List[Monkey]): List[Monkey] = {
+  def completeRound(allMonkeys: List[Monkey], smartCorrector:Boolean = false): List[Monkey] = {
 
     @tailrec
     def fMonkey(ids: List[Int], monkeys: List[Monkey]): List[Monkey] = ids match {
       case Nil => monkeys
       case head :: tail => fMonkey(
         ids = tail,
-        monkeys = monkeys.find(_.id == head).map(m => makeMoves(m, monkeys)._2).getOrElse(monkeys)
+        monkeys = monkeys.find(_.id == head).map(m => makeMoves(m, monkeys, smartCorrector)._2).getOrElse(monkeys)
       )
 
     }
@@ -64,8 +68,15 @@ object MonkeyUtils {
    * @param allMonkeys
    * @return
    */
-  def makeMoves(monkey: Monkey, allMonkeys: List[Monkey]): (List[ThrowOperation], List[Monkey]) = {
-    val (currMonkey, actions) = monkey.inspectItems
+  def makeMoves(monkey: Monkey, allMonkeys: List[Monkey], smartCorrector: Boolean = false): (List[ThrowOperation], List[Monkey]) = {
+    val (currMonkey, actions) = monkey.inspectItems match {
+      case (m, a) if smartCorrector => {
+        val divisibleDenominators: List[Int] = allMonkeys.map(_.test.divisibleDenominator)
+        // apply a smart correction to remove any "squares" in the items so that it does not go out of hand
+        (m, a.map(to => to.copy(worryItem = WorryUtils.applyCorrections(to.worryItem, divisibleDenominators))))
+      }
+      case (m, a) => (m, a)
+    }
 
     // empty the items of the current monkey
     val updatedMonkeys = allMonkeys.map({

@@ -92,7 +92,7 @@ class MonkeySpec extends AnyFlatSpec with Matchers {
   "Monkey.fromString" should "be able to form multiple monkeys from the input file format" in {
     val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"),"")
 
-    val monkeys = args.map(Monkey.fromStrings)
+    val monkeys = args.map(Monkey.fromStrings(_))
 
     monkeys.length shouldBe 4
   }
