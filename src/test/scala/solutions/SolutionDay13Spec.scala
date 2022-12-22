@@ -1,6 +1,6 @@
 package solutions
 
-import common.FileUtils
+import common.{FileUtils, ListUtils}
 import day13.Solution
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -13,8 +13,8 @@ class SolutionDay13Spec extends AnyFlatSpec with Matchers{
   }
 
   "Day 13: Part one" should "be able to find the right sum of indices" in {
-    val args = FileUtils.readFile("day13/input")
+    val args = FileUtils.readFile("day13/play")
 
-    Solution.part1(args) shouldBe 5761
+    Solution.part1(args) shouldBe 5778
   }
 }

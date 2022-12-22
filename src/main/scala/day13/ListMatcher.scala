@@ -1,40 +1,40 @@
 package day13
 
 import scala.annotation.tailrec
+import scala.collection.mutable.ArrayBuffer
 
 object ListMatcher {
 
   def compareStrLists(leftStr: String, rightStr: String): Boolean = {
 
-    println(s"compare ${leftStr} vs ${rightStr}")
-
     def addBrackets(str: String): String = s"[${str}]"
 
-    def f(lList: List[String], rList: List[String]): Boolean = (lList, rList) match {
+    def f(lList: List[String], rList: List[String]): Int = (lList, rList) match {
+      case (Nil, Nil) => 0
       case (Nil, _) => {
         println(s"return true as ran out of elements on left to compare")
-        true
+        1
       }
       case (_, Nil) => {
         println(s"return false as ran out of elements on right to compare")
-        false
+        -1
       }
       case (lh :: lTail, rh :: rTail) => {
         println(s"Attempting to check elements ${lh} and ${rh}")
         // both the elements are in brackets. Time to call this function again
-        val result: Option[Boolean] = (lh, rh) match {
+        val result: Option[Int] = (lh, rh) match {
           case (l, r) if (isInSingleBracket(l) || isInSingleBracket(r)) => {
             // this string is not unblocked. We have to call it again
-            Some(compareStrLists(l, r))
+            Some(c(l, r))
           }
           case (lStr, rStr) => (lStr.toIntOption, rStr.toIntOption) match {
             case (Some(l), Some(r)) if (l < r) => {
               println("result is true because left element is smaller than right")
-              Some(true)
+              Some(1)
             } // the program will stop now
             case (Some(l), Some(r)) if (l > r) => {
               println("result is false because left is larger than right")
-              Some(false)
+              Some(-1)
             } // the program will stop now
             case _ => None // no result was formed. Need to try the next byte
           }
@@ -43,29 +43,29 @@ object ListMatcher {
         result.getOrElse(f(lTail, rTail))
       }
     }
-
-    (leftStr, rightStr) match {
-      case (l, r) if (isInSingleBracket(l) && isInSingleBracket(r))  => {
-        // both the elements are in single brackets, time to call it again
-        compareStrLists(removeBrackets(l), removeBrackets(r))
+    def c(lstr: String, rstr: String): Int = {
+      println(s"compare ${lstr} vs ${rstr}")
+      (lstr, rstr) match {
+        case (l, r) if isInSingleBracket(l) && isInSingleBracket(r)  =>
+          // both the elements are in single brackets, time to call it again
+          c(removeBrackets(l), removeBrackets(r))
+        case (l, r) if isInSingleBracket(l) && r.nonEmpty && isSingleList(r)  =>
+          // add a correction
+          c(l, addBrackets(r))
+        case (l, r) if isInSingleBracket(r) && l.nonEmpty && isSingleList(l) =>
+          // add a correction
+          c(addBrackets(l), r)
+        case (lList , rList) =>
+          // this is where we are happy with the strings and they would be started to be compared
+          f(breakStr(lList), breakStr(rList))
       }
-      case (l, r) if (isInSingleBracket(l) && r.nonEmpty)  => {
-        // add a correction
-        compareStrLists(l, addBrackets(r))
-      }
-      case (l, r) if (isInSingleBracket(r) && l.nonEmpty) => {
-        // add a correction
-        compareStrLists(addBrackets(l), r)
-      }
-      case (lList , rList) =>
-        // this is where we are happy with the strings and they would be started to be compared
-        f(breakStr(lList), breakStr(rList))
     }
+    c(leftStr, rightStr) >= 0
   }
 
 
   /**
-   * Breaks the string in such parts that each element is either in a bracker or is a full set in itself
+   * Breaks the string in such parts that each element is either in a bracket or is a full set in itself
    *
    * @param str
    * @return
@@ -89,7 +89,7 @@ object ListMatcher {
     f(str.toList, List.empty, 0, List.empty)
   }
 
-  def isSingleList(str: String): Boolean = breakStr(str).length > 1
+  def isSingleList(str: String): Boolean = breakStr(str).length <= 1
 
   def isInSingleBracket(str: String): Boolean = {
 
