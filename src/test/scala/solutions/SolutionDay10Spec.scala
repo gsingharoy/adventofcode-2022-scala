@@ -18,4 +18,16 @@ class SolutionDay10Spec extends AnyFlatSpec with Matchers {
 
     Solution.part1(args) shouldEqual 14040
   }
+
+  "Day 10: Part two (sample)" should "print the pixels on the screen" in {
+    val args = FileUtils.readFile("day10/sample")
+    // This test does not match anything but prints the pixels on the screen
+    Solution.part2(args)
+  }
+
+  "Day 10: Part two" should "print the pixels on the screen" in {
+    val args = FileUtils.readFile("day10/input")
+    // this test does not match anything but prints the pixels on the screen. You should see "ZGCJZJFL"
+    Solution.part2(args)
+  }
 }
