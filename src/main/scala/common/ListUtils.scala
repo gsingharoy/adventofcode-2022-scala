@@ -29,4 +29,9 @@ object ListUtils {
 
     f(args, List.empty, List.empty)
   }
+
+  def transformToTuplePair[T](l: List[T]): Option[(T, T)] = l match {
+    case l if l.length != 2 => None
+    case h :: t :: _ => Some((h, t))
+  }
 }
