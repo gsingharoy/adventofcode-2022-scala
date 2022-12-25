@@ -52,12 +52,13 @@ object Position {
 }
 
 case class Brick(pos: Position) extends Pixel[Brick] {
-  val char: Char = '#'
-
+  val char: Char = Brick.char
 }
+
 
 object Brick {
 
+  val char: Char = '#'
   def fromString(str: String): List[Brick] = {
 
     @tailrec

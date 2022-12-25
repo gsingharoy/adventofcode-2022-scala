@@ -8,21 +8,28 @@ object Solution extends AdventProblemSolution[Int, Int]{
   override def part1(args: List[String]): Int = {
     val reservoir = Reservoir.fromStrings(args)
 
-    @tailrec
-    def f(r: Reservoir): Reservoir = r.newReservoirWithASandUnit match {
-      case Some(nr) => {
-        //nr.mkString.map(println)
-        println(s"Completed Sand unit # ${nr.totalSandUnits}")
-        f(nr)
-      }
-      case None => r
-    }
+    val reservoirFullOfSand = fillSand(reservoir)
 
-    val reservoirFullOfSand = f(reservoir)
-
-    reservoirFullOfSand.mkString.map(println)
+    reservoirFullOfSand.mkString.foreach(println)
     reservoirFullOfSand.totalSandUnits
   }
 
-  override def part2(args: List[String]): Int = ???
+  override def part2(args: List[String]): Int = {
+    val reservoir = Reservoir.fromStrings(args).copy(withFixedBottom = true)
+
+    val reservoirFullOfSand = fillSand(reservoir)
+
+    reservoirFullOfSand.mkString.foreach(println)
+    reservoirFullOfSand.totalSandUnits
+  }
+
+  @tailrec
+  private def fillSand(r: Reservoir): Reservoir = r.newReservoirWithASandUnit match {
+    case Some(nr) => {
+      if (nr.totalSandUnits % 100 == 0)
+      println(s"Completed Sand unit # ${nr.totalSandUnits}")
+      fillSand(nr)
+    }
+    case None => r
+  }
 }
