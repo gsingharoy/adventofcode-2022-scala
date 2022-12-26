@@ -34,12 +34,6 @@ object BeaconExclusionPoint {
 }
 
 
-case class Coordinate(x: Int, y: Int) extends Ordered[Coordinate] {
-  import scala.math.Ordered.orderingToOrdered
 
-  override def compare(that: Coordinate): Int =   (this.x, this.y) compare (that.x, that.y)
 
-  def manhattanDistance(that: Coordinate): Int = (this.x - that.x).abs + (this.y - that.y).abs
 
-  def matches(that: Coordinate): Boolean = this.x == that.x && this.y == that.y
-}
