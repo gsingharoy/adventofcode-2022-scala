@@ -29,13 +29,9 @@ case class Position(x: Int, y: Int) extends Ordered[Position] {
 
   override def compare(that: Position): Int = (this.x, this.y) compare (that.x, that.y)
 
-  lazy val posAbove: Position = this.copy(y = this.y -1)
   lazy val posDiagonallyLeft: Position = posBelow.copy(x = this.x - 1)
 
   lazy val posDiagonallyRight: Position = posBelow.copy(x = this.x + 1)
-
-  lazy val posLeft: Position = this.copy(x = this.x - 1)
-  lazy val posRight: Position = this.copy(x = this.x + 1)
 
   lazy val posBelow: Position = this.copy(y = this.y + 1)
 }
