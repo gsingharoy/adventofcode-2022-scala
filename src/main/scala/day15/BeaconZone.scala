@@ -6,11 +6,14 @@ case class BeaconZone(beaconPairs: List[SensorBeaconPair]){
 
    def beaconExclusionRanges(y: Int): List[YCoordinateRange] = {
      val allRanges: List[YCoordinateRange] = CoordinateRangeUtils.splitWithPoints(
-       ranges = beaconPairs.flatMap(_.beaconExclusionRanges(y)),
+       ranges = rangesWithoutDistressSignal(y),
        points = beaconPairs.map(_.sensor.pos) ++ beaconPairs.map(_.closestBeacon.pos)
      )
      CoordinateRangeUtils.mergeRanges(allRanges)
    }
+
+  def rangesWithoutDistressSignal(y: Int): List[YCoordinateRange] =
+    CoordinateRangeUtils.mergeRanges(beaconPairs.flatMap(_.rangeWithoutDistressSignal(y)))
 
 }
 
@@ -19,14 +22,17 @@ case class SensorBeaconPair(sensor: Sensor, closestBeacon: Beacon) {
   private lazy val maxPossibleDistanceForNoBeacons: Int = sensor.pos.manhattanDistance(closestBeacon.pos)
 
   def beaconExclusionRanges(y: Int): List[YCoordinateRange] =
+    rangeWithoutDistressSignal(y)
+      .map(_.split(sensor.pos).flatMap(_.split(closestBeacon.pos)).sorted)
+      .getOrElse(List.empty)
+
+
+  def rangeWithoutDistressSignal(y: Int): Option[YCoordinateRange] =
     if ((y - sensor.pos.y).abs > maxPossibleDistanceForNoBeacons)
-      List.empty // not within the expected manhattan distance
+      None // not within the expected manhattan distance
     else {
       val xLength: Int = maxPossibleDistanceForNoBeacons - (y - sensor.pos.y).abs
-      YCoordinateRange(y = y, xStart = sensor.pos.x - xLength, xEnd = sensor.pos.x + xLength)
-        .split(sensor.pos)
-        .flatMap(_.split(closestBeacon.pos))
-        .sorted
+      Some(YCoordinateRange(y = y, xStart = sensor.pos.x - xLength, xEnd = sensor.pos.x + xLength))
     }
 
 }

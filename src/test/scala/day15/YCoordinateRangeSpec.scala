@@ -82,4 +82,34 @@ class YCoordinateRangeSpec extends AnyFlatSpec with Matchers {
     )
   }
 
+  "YCoordinateRange#applyLimit" should "be able to return the same value if it is completely in range" in {
+    YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
+      .applyLimit(-1, 301) shouldEqual Some(YCoordinateRange(y = 100, xStart = 0, xEnd = 300))
+  }
+
+  "YCoordinateRange#applyLimit" should "be able to return shaved range value if it is partially in limit" in {
+    YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
+      .applyLimit(2, 301) shouldEqual Some(YCoordinateRange(y = 100, xStart = 2, xEnd = 300))
+
+    YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
+      .applyLimit(-1, 200) shouldEqual Some(YCoordinateRange(y = 100, xStart = 0, xEnd = 200))
+  }
+
+  "YCoordinateRange#applyLimit" should "be able to return shaved range value if it is completely in limit" in {
+    YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
+      .applyLimit(10, 200) shouldEqual Some(YCoordinateRange(y = 100, xStart = 10, xEnd = 200))
+
+
+  }
+
+  "YCoordinateRange#applyLimit" should "be able to return None  value if it is not in limit" in {
+    YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
+      .applyLimit(301, 350) shouldEqual None
+
+    YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
+      .applyLimit(-10, -1) shouldEqual None
+
+
+  }
+
 }
