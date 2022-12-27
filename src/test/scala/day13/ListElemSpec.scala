@@ -42,20 +42,38 @@ class ListElemSpec extends AnyFlatSpec with Matchers {
 
 
   "ListElem#children" should "return the correct children" in {
-    ListElem("[[1],[2,3,4]]", ListElemPosition.Start, None)
+    ListElem("[[1],[2,3,4]]", ListElemPosition.Start)
       .children shouldEqual List(
-      ListElem("[1]", ListElemPosition(1, 0), Some(ListElemPosition.Start)),
-      ListElem("[2,3,4]", ListElemPosition(1, 1), Some(ListElemPosition.Start))
+      ListElem("[1]", ListElemPosition("0", 0)),
+      ListElem("[2,3,4]", ListElemPosition("0", 1))
     )
 
-    ListElem("1,[3,7]", ListElemPosition.Start, None)
+    ListElem("1,[3,7]", ListElemPosition.Start)
       .children shouldEqual List.empty
 
-    ListElem("[1,[3,7]]", ListElemPosition.Start, None)
+    ListElem("[1,[3,7]]", ListElemPosition.Start)
       .children shouldEqual List(
-      ListElem("1", ListElemPosition(1, 0), Some(ListElemPosition.Start)),
-      ListElem("[3,7]", ListElemPosition(1, 1), Some(ListElemPosition.Start))
+      ListElem("1", ListElemPosition("0", 0)),
+      ListElem("[3,7]", ListElemPosition("0", 1))
     )
+
+    ListElem("[1,[3,7]]", ListElemPosition("1", 10))
+      .children shouldEqual List(
+      ListElem("1", ListElemPosition("1/10", 0)),
+      ListElem("[3,7]", ListElemPosition("1/10", 1))
+    )
+
+  }
+
+  "ListElemPosition#parent" should "return the correct parent position" in {
+    ListElemPosition("0/1/10/20", 3).parentPos shouldEqual Some(
+      ListElemPosition("0/1/10", 20)
+    )
+
+    "ListElemPosition#childDepth" should "return the correct children's depth" in {
+      ListElemPosition("0/1/10/20", 3).childDepth shouldEqual "0/1/10/20/3"
+      ListElemPosition.Start.childDepth shouldEqual "0"
+    }
 
   }
 }

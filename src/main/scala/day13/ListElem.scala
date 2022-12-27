@@ -11,16 +11,14 @@ import scala.annotation.tailrec
  * @param parentPos
  */
 case class ListElem(elem: String,
-                    pos: ListElemPosition,
-                    parentPos: Option[ListElemPosition]) {
+                    pos: ListElemPosition) {
 
   def children: List[ListElem] = {
     if(ListElem.isInSingleBracket(elem)) ListElem.breakStr(ListElem.removeBrackets(elem))
           .zipWithIndex.map( {
           case (s, i) =>
             ListElem(elem = s,
-            pos = ListElemPosition(depth = this.pos.depth +1, breadth = i),
-            parentPos = Some(this.pos))
+            pos = ListElemPosition(depth = this.pos.childDepth, breadth = i))
         })
     else
       List.empty // there are no children as the current element is not a list
@@ -29,6 +27,8 @@ case class ListElem(elem: String,
 }
 
 object ListElem {
+
+  def root(elem: String): ListElem = ListElem(elem, ListElemPosition.Start)
   /**
    * Breaks the string in such parts that each element is either in a bracket or is a full set in itself
    *
@@ -89,9 +89,27 @@ object ListElem {
 
 }
 
-case class ListElemPosition(depth: Int, breadth: Int)
+case class ListElemPosition(depth: String, breadth: Int) {
+
+   lazy val parentPos: Option[ListElemPosition] = depth.split("/").toList.reverse match {
+     case l if l.isEmpty => None
+     case head :: tail => head.toIntOption.map( i =>
+       ListElemPosition(tail.reverse.mkString("/"), i)
+     )
+     case _ => None // This is the root position
+   }
+
+  lazy val childDepth: String = depth match {
+    case "" => s"${breadth}"
+    case d => (d.split("/").toList :+ s"${breadth}").mkString("/")
+  }
+
+  lazy val isRootPosition: Boolean = this == ListElemPosition.Start
+}
 
 object  ListElemPosition {
 
-  val Start: ListElemPosition = ListElemPosition(0, 0)
+
+
+  val Start: ListElemPosition = ListElemPosition("", 0)
 }
