@@ -11,4 +11,10 @@ class SolutionDay15Spec extends AnyFlatSpec with Matchers {
 
     Solution.part1(args) shouldEqual 5240818
   }
+
+  "Day 15: Part two" should "be able to triangulate the distress signal location" in {
+    val args = FileUtils.readFile("day15/input")
+
+    Solution.part2(args) shouldEqual 13213086906101L
+  }
 }

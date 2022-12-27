@@ -31,4 +31,19 @@ object CoordinateRangeUtils {
     f(points.sorted, ranges.sorted)
   }
 
+  def modifyRangesWithLimits(ranges: List[YCoordinateRange], xMin: Int, xMax: Int): List[YCoordinateRange] = {
+
+    @tailrec
+    def f(currRanges: List[YCoordinateRange],
+          result: List[YCoordinateRange]): List[YCoordinateRange] = currRanges match {
+      case Nil => result.sorted
+      case head :: tail => head.applyLimit(xMin, xMax) match {
+          case Some(nr) => f(tail, nr :: result)
+          case None => f(tail, result)
+        }
+    }
+
+    f(ranges, List.empty)
+  }
+
 }

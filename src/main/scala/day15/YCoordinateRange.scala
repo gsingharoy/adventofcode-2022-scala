@@ -36,6 +36,18 @@ case class YCoordinateRange(y: Int, xStart: Int, xEnd: Int) extends Ordered[YCoo
     case _ => None // lazy programming. Could be a failure type here
   }
 
+  def applyLimit(xMin: Int, xMax: Int): Option[YCoordinateRange] =
+    if (!Range.inclusive(xMin, xMax).contains(this.xStart) && Range.inclusive(xMin, xMax).contains(this.xEnd))
+      Some(this.copy(xStart = xMin))
+    else if (Range.inclusive(xMin, xMax).contains(this.xStart) && !Range.inclusive(xMin, xMax).contains(this.xEnd))
+      Some(this.copy(xEnd = xMax))
+    else if (Range.inclusive(this.xStart, this.xEnd).contains(xMin) && Range.inclusive(this.xStart, this.xEnd).contains(xMax))
+      Some(this.copy(xStart = xMin, xEnd = xMax))
+    else if (Range.inclusive(xMin, xMax).contains(this.xStart) && Range.inclusive(xMin, xMax).contains(this.xEnd))
+      Some(this)
+    else
+      None
+
   override def compare(that: YCoordinateRange): Int = this.xStart - that.xStart
 
   /**
