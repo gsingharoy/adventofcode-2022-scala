@@ -9,7 +9,13 @@ object ListMatcher {
 
     def addBrackets(str: String): String = s"[${str}]"
 
-    def f(lList: List[String], rList: List[String]): Int = (lList, rList) match {
+    /**
+     * This method analyzes the breadth of a list.
+     * @param lList
+     * @param rList
+     * @return 1 where the items are in order. -1 when the items are not in order. 0 when the items are not enough to be found a result
+     */
+    def breadth(lList: List[String], rList: List[String]): Int = (lList, rList) match {
       case (Nil, Nil) => 0
       case (Nil, _) => {
         println(s"return true as ran out of elements on left to compare")
@@ -25,7 +31,7 @@ object ListMatcher {
         val result: Option[Int] = (lh, rh) match {
           case (l, r) if (isInSingleBracket(l) || isInSingleBracket(r)) => {
             // this string is not unblocked. We have to call it again
-            Some(c(l, r))
+            Some(depth(l, r))
           }
           case (lStr, rStr) => (lStr.toIntOption, rStr.toIntOption) match {
             case (Some(l), Some(r)) if (l < r) => {
@@ -40,27 +46,27 @@ object ListMatcher {
           }
 
         }
-        result.getOrElse(f(lTail, rTail))
+        result.getOrElse(breadth(lTail, rTail))
       }
     }
-    def c(lstr: String, rstr: String): Int = {
+    def depth(lstr: String, rstr: String): Int = {
       println(s"compare ${lstr} vs ${rstr}")
       (lstr, rstr) match {
         case (l, r) if isInSingleBracket(l) && isInSingleBracket(r)  =>
           // both the elements are in single brackets, time to call it again
-          c(removeBrackets(l), removeBrackets(r))
+          depth(removeBrackets(l), removeBrackets(r))
         case (l, r) if isInSingleBracket(l) && r.nonEmpty && isSingleList(r)  =>
           // add a correction
-          c(l, addBrackets(r))
+          depth(l, addBrackets(r))
         case (l, r) if isInSingleBracket(r) && l.nonEmpty && isSingleList(l) =>
           // add a correction
-          c(addBrackets(l), r)
+          depth(addBrackets(l), r)
         case (lList , rList) =>
           // this is where we are happy with the strings and they would be started to be compared
-          f(breakStr(lList), breakStr(rList))
+          breadth(breakStr(lList), breakStr(rList))
       }
     }
-    c(leftStr, rightStr) >= 0
+    depth(leftStr, rightStr) >= 0
   }
 
 
