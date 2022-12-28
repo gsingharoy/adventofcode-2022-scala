@@ -63,17 +63,24 @@ class ListElemSpec extends AnyFlatSpec with Matchers {
       ListElem("[3,7]", ListElemPosition("1/10", 1))
     )
 
+    ListElem("[1]", ListElemPosition("0/0", 0))
+      .children shouldEqual List(
+      ListElem("1", ListElemPosition("0/0/0", 0))
+    )
+
+    ListElem("[]", ListElemPosition("0/1", 3)).children shouldEqual List.empty
   }
 
   "ListElemPosition#parent" should "return the correct parent position" in {
+
     ListElemPosition("0/1/10/20", 3).parentPos shouldEqual Some(
       ListElemPosition("0/1/10", 20)
     )
+  }
 
     "ListElemPosition#childDepth" should "return the correct children's depth" in {
       ListElemPosition("0/1/10/20", 3).childDepth shouldEqual "0/1/10/20/3"
       ListElemPosition.Start.childDepth shouldEqual "0"
     }
 
-  }
 }

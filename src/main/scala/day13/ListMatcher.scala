@@ -8,17 +8,36 @@ object ListMatcher {
 
   def compareStrLists(leftStr: String, rightStr: String): Boolean = {
 
+    /**
+     * These are mutable variables. The idea is to keep a track of all visited elements and also mark the ones which are
+     * evaluated
+     */
     val visitedElements: ArrayBuffer[ListElem] = ArrayBuffer()
     val evaluatedElements: ArrayBuffer[ListElemPosition] = ArrayBuffer()
 
-    def addVisitedElements(elem: ListElem): Unit =
+    /**
+     * Sub function to add the element as discovered.
+     *
+     * @param elem
+     */
+    def addDiscoveredElements(elem: ListElem): Unit =
       if (!visitedElements.contains(elem)) {
         visitedElements += elem
         visitedElements ++= elem.children
       }
 
 
-    def unEvaluatedItems(lStr: String, rStr: String, currElem: ListElem): (List[String], List[String], List[ListElem]) = {
+    /**
+     * Finds all the unevaluated element tries of two strings within one depth
+     *
+     * @param lStr
+     * @param rStr
+     * @param currElem
+     * @return
+     */
+    def unEvaluatedItems(lStr: String,
+                         rStr: String,
+                         currElem: ListElem): (List[String], List[String], List[ListElem]) = {
 
       @tailrec
       def f(l: List[String],
@@ -37,10 +56,20 @@ object ListMatcher {
 
     def addEvaluatedElements(currPos: ListElemPosition): Unit = {
 
+      /**
+       * This sub function attempts to mark the parent as evaluated if all of it's children are evaluated
+       *
+       * @param cp
+       * @return
+       */
       @tailrec
-      def markP(cp: ListElemPosition): ListElemPosition =
-        if (visitedElements.count(e => e.pos.depth == currPos.depth) ==
-          evaluatedElements.filter(_.depth == currPos.depth).distinct.length) {
+      def markP(cp: ListElemPosition): ListElemPosition = {
+        val visitedChildrenCount: Int = visitedElements.distinct
+          .count(e => e.pos.depth == currPos.childDepth)
+        val evaluatedChildrenCount: Int = evaluatedElements
+          .filter(_.depth == currPos.childDepth).distinct.length
+
+        if (visitedChildrenCount == evaluatedChildrenCount) {
           // mark the current position first
           evaluatedElements += cp
           cp.parentPos match {
@@ -50,12 +79,13 @@ object ListMatcher {
         } else {
           cp
         }
+      }
 
       // mark all breadth to be visited
-      evaluatedElements += currPos
+      evaluatedElements ++= visitedElements.filter(_.pos == currPos).map(_.pos)
 
       // check if all the elements in the breadth are evaluated. If the answer is yes, then mark the parent as also evaluated
-      currPos.parentPos.foreach(markP)
+      currPos.parentPos.map(markP)
     }
 
 
@@ -104,24 +134,27 @@ object ListMatcher {
     }
 
 
-        def depthF(lstr: String, rstr: String, currElem: ListElem): Int = {
+        def depthF(lstr: String, rstr: String, currPos: ListElem): Int = {
           println(s"compare ${lstr} vs ${rstr}")
-          evaluatedElements.foreach(println)
-          addVisitedElements(currElem)
+          println(s"currently in depth ${currPos.pos.depth} and breadth ${currPos.pos.breadth}")
+          addDiscoveredElements(currPos)
           (lstr, rstr) match {
             case (l, r) if isInSingleBracket(l) && isInSingleBracket(r) =>
               // both the elements are in single brackets, time to call it again
-              depthF(removeBrackets(l), removeBrackets(r), currElem)
+              depthF(removeBrackets(l), removeBrackets(r), currPos)
             case (l, r) if isInSingleBracket(l) && r.nonEmpty && isSingleList(r) =>
               // add a correction
-              depthF(l, addBrackets(r), currElem)
+              depthF(l, addBrackets(r), currPos)
             case (l, r) if isInSingleBracket(r) && l.nonEmpty && isSingleList(l) =>
               // add a correction
-              depthF(addBrackets(l), r, currElem)
+              depthF(addBrackets(l), r, currPos)
             case (lList, rList) =>
               // this is where we are happy with the strings and they would be started to be compared
-              unEvaluatedItems(lList, rList, currElem) match {
-                case (_, _, Nil) => 0 // all elements have been evaluated
+              unEvaluatedItems(lList, rList, currPos) match {
+                case (Nil, Nil, _) => {
+                  addEvaluatedElements(currPos.pos) // the parent is marked as done
+                  0 // would have to be tried again
+                }
                 case (l, r, e) => breadthF(l, r, e)
               }
           }

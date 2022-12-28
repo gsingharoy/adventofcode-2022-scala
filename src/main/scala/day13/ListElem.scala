@@ -14,15 +14,16 @@ case class ListElem(elem: String,
                     pos: ListElemPosition) {
 
   def children: List[ListElem] = {
-    if(ListElem.isInSingleBracket(elem)) ListElem.breakStr(ListElem.removeBrackets(elem))
-          .zipWithIndex.map( {
+    if(ListElem.isInSingleBracket(elem)) {
+      ListElem.breakStr(ListElem.removeBrackets(elem))
+        .zipWithIndex.map( {
           case (s, i) =>
             ListElem(elem = s,
             pos = ListElemPosition(depth = this.pos.childDepth, breadth = i))
         })
-    else
+    } else {
       List.empty // there are no children as the current element is not a list
-
+    }
   }
 }
 
