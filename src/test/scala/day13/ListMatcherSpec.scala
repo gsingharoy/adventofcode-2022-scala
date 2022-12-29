@@ -62,6 +62,22 @@ class ListMatcherSpec extends AnyFlatSpec with Matchers {
       "[[[[],8],1]]",
       "[[[[]]],[[[0,6,8]],[],1,[[4,5,6,7]]],[[5,[10,10,8],[5,4,2,10,5],[4,10,7,0]],7,5,[6,[4,6,8,7,8],[4,8,6]]],[0,5],[9]]"
     ) shouldEqual false
+
+    ListMatcher.compareStrLists(
+      "[[[],[[7,8,2]],0,9,7]]",
+      "[[[],[10,[6,3],[1,8,1]]]]"
+    ) shouldEqual true
+
+    ListMatcher.compareStrLists(
+      "[[[],[[7,8,2]],0,9,7]]",
+      "[[[],[10,[6,3],[1,8,1]]]]"
+    ) shouldEqual true
+
+    ListMatcher.compareStrLists(
+      "[[2,[],[[1,9,1,2],8]]]",
+      "[[2,[],8,[9,[10,5],[9],1]],[5]]"
+    ) shouldEqual true
+
   }
 
 

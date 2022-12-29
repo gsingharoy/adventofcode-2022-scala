@@ -12,19 +12,19 @@ object ListMatcher {
      * These are mutable variables. The idea is to keep a track of all visited elements and also mark the ones which are
      * evaluated
      */
-    val visitedElements: ArrayBuffer[ListElemPosition] = ArrayBuffer()
+    val discoveredElements: ArrayBuffer[ListElemPosition] = ArrayBuffer()
     val evaluatedElements: ArrayBuffer[ListElemPosition] = ArrayBuffer()
-
+    var addedEvaluation: Boolean = false
     /**
      * Sub function to add the element as discovered.
      *
      * @param elem
      */
-    def addDiscoveredElements(elem: ListElem): Unit =
-      if (!visitedElements.contains(elem.pos)) {
-        visitedElements += elem.pos
-        visitedElements ++= elem.children.map(_.pos)
-      }
+    def initializeDiscoveredElements(elem: ListElem): Unit = {
+      discoveredElements += elem.pos
+      elem.children.foreach(initializeDiscoveredElements)
+    }
+
 
 
     /**
@@ -43,8 +43,7 @@ object ListMatcher {
       def f(l: List[String],
             r: List[String],
             c: List[ListElemPosition]): (List[String], List[String], List[ListElemPosition]) = (l, r, c) match {
-        case (l, r, c) if (l.isEmpty || r.isEmpty) => (l, r, c)
-        case (_, _, Nil) => (Nil, Nil, Nil)
+        case (l, r, c) if (l.isEmpty || r.isEmpty || c.isEmpty) => (l, r, c)
         case (lh :: lt, rh :: rt, ceh :: cet) => if (evaluatedElements.contains(ceh))
           f(lt, rt, cet)
         else (lh :: lt, rh :: rt, ceh :: cet)
@@ -54,34 +53,26 @@ object ListMatcher {
     }
 
 
-    def addEvaluatedElements(currPos: ListElemPosition): Unit = {
-
-      /**
-       * This sub function attempts to mark the parent as evaluated if all of it's children are evaluated
-       *
-       * @param cp
-       * @return
-       */
-      def markP(cp: ListElemPosition): Unit = {
-        val visitedChildrenCount: Int = visitedElements.distinct
-          .count(_.depth == currPos.childDepth)
-        val evaluatedChildrenCount: Int = evaluatedElements
-          .filter(_.depth == currPos.childDepth).distinct.length
-
-        if (visitedChildrenCount == evaluatedChildrenCount) {
-          // mark the current position first
-          evaluatedElements += cp
-          //println(s"Marked Parent element position ${cp} as evaluated")
-        }
-      }
-
-      // mark all breadth to be visited
-      evaluatedElements ++= visitedElements.filter(_ == currPos)
-
-      //println(s"Marked element positions ${visitedElements.filter(_ == currPos)} as evaluated")
+    /**
+     * Function to mark elements as evaluated. This helps in not going through the same elements again.
+     *
+     * @param currPos
+     */
+    def markElementsAsEvaluated(currPos: ListElemPosition): Unit = {
+      evaluatedElements += currPos
 
       // check if all the elements in the breadth are evaluated. If the answer is yes, then mark the parent as also evaluated
-      currPos.parentPos.foreach(markP)
+      currPos.parentPos.foreach( parentPos => {
+        val evaluatedChildrenCountBreaths: List[Int] = evaluatedElements
+          .filter(_.depth == parentPos.childDepth).distinct.map(_.breadth).toList
+        val unvisitedChildrenCount: Int = discoveredElements.distinct
+          .count(e => e.depth == parentPos.childDepth && !evaluatedChildrenCountBreaths.contains(e.breadth))
+
+
+        if (unvisitedChildrenCount == 0)  // there are no unvisited children left. Mark the parent now as visited
+          evaluatedElements += parentPos
+      }
+      )
     }
 
 
@@ -90,26 +81,18 @@ object ListMatcher {
      *
      * @param lList
      * @param rList
-     * @return 1 where the items are in order. -1 when the items are not in order. 0 when the items are not enough to be found a result
+     * @return 1 where the items are in order.
+     *         -1 when the items are not in order.
+     *         0 when the items are not enough to be found a result
      */
     def breadthF(lList: List[String],
                  rList: List[String],
                  elements: List[ListElemPosition]): Int = (lList, rList, elements) match {
-      case (Nil, Nil, _) => {
-        //println("Ran out of elements to compare. Try the next elements")
-        0
-      }
-      case (Nil, _, _) => {
-        //println(s"return true as ran out of elements on left to compare")
-        1
-      }
-      case (_, Nil, _) => {
-        //println(s"return false as ran out of elements on right to compare")
-        -1
-      }
+      case (Nil, Nil, _) => 0 // Ran out of elements to compare. Try the next elements
+      case (Nil, _, _) => 1 // return true as ran out of elements on left to compare
+      case (_, Nil, _) => -1 // return false as ran out of elements on right to compare
+
       case (lh :: lTail, rh :: rTail, cPos :: tailElements) => {
-        //println(s"Attempting to check elements ${lh} and ${rh}")
-        // both the elements are in brackets. Time to call this function again
         val result: Option[Int] = (lh, rh) match {
           case (l, r) if isInSingleBracket(l) && isInSingleBracket(r) => {
             // this string is not unblocked. We have to call it again
@@ -124,16 +107,10 @@ object ListMatcher {
             Some(depthF(addBrackets(l), r, cPos))
           }
           case (lStr, rStr) => (lStr.toIntOption, rStr.toIntOption) match {
-            case (Some(l), Some(r)) if (l < r) => {
-              //println("result is true because left element is smaller than right")
-              Some(1)
-            } // the program will stop now
-            case (Some(l), Some(r)) if (l > r) => {
-              //println("result is false because left is larger than right")
-              Some(-1)
-            } // the program will stop now
+            case (Some(l), Some(r)) if (l < r) => Some(1) // the program will stop now as the bytes are in order
+            case (Some(l), Some(r)) if (l > r) => Some(-1) // the program will stop now as the bytes are not in order
             case _ => {
-              addEvaluatedElements(cPos) // mark till current element to be evaluated
+              evaluatedElements += cPos // mark till current element to be evaluated
               None // no result was formed. Need to try the next byte
             }
           }
@@ -143,28 +120,47 @@ object ListMatcher {
     }
 
 
-        def depthF(lstr: String, rstr: String, currPos: ListElemPosition): Int = {
-          //println(s"compare ${lstr} vs ${rstr}")
-          //println(s"currently in depth ${currPos.depth} and breadth ${currPos.breadth}")
-          addDiscoveredElements(ListElem(lstr,currPos))
-          unEvaluatedItems(lstr, rstr, currPos) match {
-            case (Nil, Nil, _) => {
-              addEvaluatedElements(currPos) // the parent is marked as done
-              0 // would have to be tried again
+    /**
+     * Analyzes the depth of the list. If it finds sub elements then it calls the breadthF function to analyze the elements
+     *
+     * @param lstr
+     * @param rstr
+     * @param currPos
+     * @return -1 when the bytes are not in order
+     *         0 when no result has been found.
+     *         1 when the bytes are in order
+     */
+        def depthF(lstr: String,
+                   rstr: String,
+                   currPos: ListElemPosition): Int = unEvaluatedItems(lstr, rstr, currPos) match {
+            case (l, r, e) => breadthF(l, r, e) match {
+              case 0 => {
+                if (!addedEvaluation) {
+                  markElementsAsEvaluated(currPos)
+                  addedEvaluation = true
+                }
+                0
+              }
+              case r => r
             }
-            case (l, r, e) => breadthF(l, r, e)
+          }
+
+
+
+      @tailrec
+        def exec(counter: Int): Boolean = {
+          if (counter >= 10)
+            throw new RuntimeException(s"Could not figure out a solution after ${counter} retries")
+          addedEvaluation = false
+          (depthF(leftStr, rightStr, ListElemPosition.Start), evaluatedElements.contains(ListElemPosition.Start)) match {
+            case (0, false) => exec(counter + 1)
+            case (0, true) => true // ran out of elements to compare on the left side
+            case (result, _) => result > 0
           }
         }
 
-        def exec(): Boolean = {
-          val result = depthF(leftStr, rightStr, ListElemPosition.Start )
-          if (result == 0)
-            exec() // try again
-          else
-            result > 0
-        }
-
-      exec()
+    initializeDiscoveredElements(ListElem.root(leftStr))
+    exec(1)
 
     }
 

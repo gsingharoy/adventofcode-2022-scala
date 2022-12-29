@@ -69,6 +69,10 @@ class ListElemSpec extends AnyFlatSpec with Matchers {
     )
 
     ListElem("[]", ListElemPosition("0/1", 3)).children shouldEqual List.empty
+
+    ListElem("[[[[],8],1]]", ListElemPosition.Start).children shouldEqual List(
+      ListElem("[[[],8],1]", ListElemPosition("0", 0))
+    )
   }
 
   "ListElemPosition#parent" should "return the correct parent position" in {
