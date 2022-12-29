@@ -13,7 +13,6 @@ object Solution extends AdventProblemSolution[Int, Int] {
   private def indicesInRightOrder(packets: List[(String, String)]): List[Int] =
     packets.zipWithIndex.flatMap {
       case ((l, r), i) => {
-        println(s"Starting to decode for index : ${i+1}")
         if (ListMatcher.compareStrLists(l, r)) Some(i + 1) else None
       }
     }

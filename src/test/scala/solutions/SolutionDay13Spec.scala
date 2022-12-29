@@ -13,7 +13,7 @@ class SolutionDay13Spec extends AnyFlatSpec with Matchers{
   }
 
   "Day 13: Part one" should "be able to find the right sum of indices" in {
-    val args = FileUtils.readFile("day13/play")
+    val args = FileUtils.readFile("day13/input")
 
     Solution.part1(args) shouldBe 5557
   }

@@ -61,6 +61,11 @@ object ListElem {
     case s => s
   }
 
+  def getListElements(str: String): List[String] =
+    if (isInSingleBracket(str))
+    breakStr(removeBrackets(str))
+  else List.empty
+
 
   def isInSingleBracket(str: String): Boolean = {
 
