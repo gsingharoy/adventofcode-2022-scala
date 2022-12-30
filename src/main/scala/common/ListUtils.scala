@@ -4,16 +4,15 @@ import scala.annotation.tailrec
 
 object ListUtils {
 
-  /**
-   * Utility function which helps split a list at pivot values.
-   *
-   *
-   * @param args
-   * @param pivotValue
-   * @tparam T
-   * @return eg, if List("aaa", "1", "bb", "cc", "89", "1", "90") is sent as an argument and the pivotValue is "1"
-   *         List(List("aaa"), List("bb", "cc", "89"), List("90")) would be returned
-   */
+  /** Utility function which helps split a list at pivot values.
+    *
+    * @param args
+    * @param pivotValue
+    * @tparam T
+    * @return
+    *   eg, if List("aaa", "1", "bb", "cc", "89", "1", "90") is sent as an argument and the
+    *   pivotValue is "1" List(List("aaa"), List("bb", "cc", "89"), List("90")) would be returned
+    */
   def zipListByPivotValue[T](args: List[T], pivotValue: T): List[List[T]] = {
 
     @tailrec
@@ -32,6 +31,6 @@ object ListUtils {
 
   def transformToTuplePair[T](l: List[T]): Option[(T, T)] = l match {
     case l if l.length != 2 => None
-    case h :: t :: _ => Some((h, t))
+    case h :: t :: _        => Some((h, t))
   }
 }

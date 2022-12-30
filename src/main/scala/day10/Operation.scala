@@ -1,6 +1,6 @@
 package day10
 
-trait Operation{
+trait Operation {
   def cycles: Int
 
   def exec(totalCycles: Int, x: Int): (Int, List[CycleHistory])
@@ -9,9 +9,9 @@ trait Operation{
 object Operation {
 
   def fromString(str: String): Option[Operation] = str match {
-    case s"noop" => Some(Noop())
+    case s"noop"         => Some(Noop())
     case s"addx ${sInt}" => sInt.toIntOption.map(Addx)
-    case _ => None
+    case _               => None
   }
 
   def fromStrings(strings: List[String]): List[Operation] = strings.flatMap(fromString)
@@ -23,9 +23,9 @@ case class Noop() extends Operation {
   override def exec(totalCycles: Int, x: Int): (Int, List[CycleHistory]) = {
     val cycleHistories = List(
       CycleHistory(
-      cycle = totalCycles + 1,
-      startX = x,
-      endX = x
+        cycle = totalCycles + 1,
+        startX = x,
+        endX = x
       )
     )
     (x, cycleHistories)

@@ -3,7 +3,7 @@ package day2
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class PlayActionSpec extends  AnyFlatSpec with Matchers {
+class PlayActionSpec extends AnyFlatSpec with Matchers {
   "PlayAction.constructAction" should "return None if it cannot construct" in {
     val config = PlayConfig(rock = 'A', paper = 'B', scissors = 'C')
 

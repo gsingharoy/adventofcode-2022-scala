@@ -14,7 +14,9 @@ class AssignmentSpec extends AnyFlatSpec with Matchers {
 
   "Assignment.constructFromString" should "return the correct Assignments for proper assignment pairs" in {
 
-    Assignment.constructFromString("2-4,6-8") shouldEqual Some(Assignment(List(2,3,4), List(6,7,8)))
+    Assignment.constructFromString("2-4,6-8") shouldEqual Some(
+      Assignment(List(2, 3, 4), List(6, 7, 8))
+    )
 
   }
 
@@ -30,7 +32,7 @@ class AssignmentSpec extends AnyFlatSpec with Matchers {
 
   "Assignment#hasCompleteOverlap" should "return false for the cases where there are NO overlaps" in {
 
-    val rawStrings: List[String] = List[String]("2-4,6-8", "2-3,4-5", "5-7,7-9","2-6,4-8")
+    val rawStrings: List[String] = List[String]("2-4,6-8", "2-3,4-5", "5-7,7-9", "2-6,4-8")
     for (str <- rawStrings) {
       val ass = Assignment.constructFromString(str).get
       ass.hasCompleteOverlap shouldEqual false

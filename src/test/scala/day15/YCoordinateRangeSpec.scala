@@ -7,13 +7,19 @@ class YCoordinateRangeSpec extends AnyFlatSpec with Matchers {
   "YCoordinateRange#split" should "return the same range when the coordinate is not within the range" in {
 
     YCoordinateRange(y = 100, xStart = 0, xEnd = 200)
-      .split(Coordinate(2, 101)) shouldEqual(List(YCoordinateRange(y = 100, xStart = 0, xEnd = 200)))
+      .split(Coordinate(2, 101)) shouldEqual (List(
+      YCoordinateRange(y = 100, xStart = 0, xEnd = 200)
+    ))
 
     YCoordinateRange(y = 100, xStart = 0, xEnd = 200)
-      .split(Coordinate(-1, 100)) shouldEqual (List(YCoordinateRange(y = 100, xStart = 0, xEnd = 200)))
+      .split(Coordinate(-1, 100)) shouldEqual (List(
+      YCoordinateRange(y = 100, xStart = 0, xEnd = 200)
+    ))
 
     YCoordinateRange(y = 100, xStart = 0, xEnd = 200)
-      .split(Coordinate(201, 100)) shouldEqual (List(YCoordinateRange(y = 100, xStart = 0, xEnd = 200)))
+      .split(Coordinate(201, 100)) shouldEqual (List(
+      YCoordinateRange(y = 100, xStart = 0, xEnd = 200)
+    ))
   }
 
   "YCoordinateRange#split" should "return the updated range if the split point is one of the edges of the range" in {
@@ -22,7 +28,9 @@ class YCoordinateRangeSpec extends AnyFlatSpec with Matchers {
       .split(Coordinate(0, 100)) shouldEqual List(YCoordinateRange(y = 100, xStart = 1, xEnd = 200))
 
     YCoordinateRange(y = 100, xStart = 0, xEnd = 200)
-      .split(Coordinate(200, 100)) shouldEqual List(YCoordinateRange(y = 100, xStart = 0, xEnd = 199))
+      .split(Coordinate(200, 100)) shouldEqual List(
+      YCoordinateRange(y = 100, xStart = 0, xEnd = 199)
+    )
   }
 
   "YCoordinateRange#split" should "return the updated range if the split point is between the range" in {
@@ -46,8 +54,8 @@ class YCoordinateRangeSpec extends AnyFlatSpec with Matchers {
     YCoordinateRange(y = 100, xStart = 0, xEnd = 200).merge(
       YCoordinateRange(y = 100, xStart = 201, xEnd = 300)
     ) shouldEqual Some(
-        YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
-      )
+      YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
+    )
 
     YCoordinateRange(y = 100, xStart = 0, xEnd = 200).merge(
       YCoordinateRange(y = 100, xStart = -10, xEnd = -1)
@@ -99,7 +107,6 @@ class YCoordinateRangeSpec extends AnyFlatSpec with Matchers {
     YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
       .applyLimit(10, 200) shouldEqual Some(YCoordinateRange(y = 100, xStart = 10, xEnd = 200))
 
-
   }
 
   "YCoordinateRange#applyLimit" should "be able to return None  value if it is not in limit" in {
@@ -108,7 +115,6 @@ class YCoordinateRangeSpec extends AnyFlatSpec with Matchers {
 
     YCoordinateRange(y = 100, xStart = 0, xEnd = 300)
       .applyLimit(-10, -1) shouldEqual None
-
 
   }
 

@@ -4,10 +4,10 @@ import common.FileUtils
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class RopeBridgeUtilsSpec  extends AnyFlatSpec with Matchers {
+class RopeBridgeUtilsSpec extends AnyFlatSpec with Matchers {
   "RopeBridgeUtils.isTailNeededToMove" should "return false for the cases where head and tail are adjacent" in {
-    val tail1 = Tail(Position(2,4))
-    val head1 = Head(Position(1,4))
+    val tail1 = Tail(Position(2, 4))
+    val head1 = Head(Position(1, 4))
 
     RopeBridgeUtils.isTailNeededToMove(tail1, head1) shouldEqual false
 
@@ -70,7 +70,7 @@ class RopeBridgeUtilsSpec  extends AnyFlatSpec with Matchers {
     val tail3 = Tail(Position(3, 0))
     val head3 = Head(Position(4, 3))
 
-    RopeBridgeUtils.adjustTail(tail3, head3) shouldEqual Tail(Position(4,1))
+    RopeBridgeUtils.adjustTail(tail3, head3) shouldEqual Tail(Position(4, 1))
   }
 
   "RopeBridgeUtils.makeMoves" should "be able to make the moves from the sample in the question" in {
@@ -89,7 +89,11 @@ class RopeBridgeUtilsSpec  extends AnyFlatSpec with Matchers {
     val moves: List[Move] = Move.fromStrings(args)
 
     val rb: RopeBridge = RopeBridgeUtils
-      .makeMoves(moves, Head.StartPosition, Range.inclusive(1,9).toList.map( i=> Tail.StartPosition.copy(id = i)))
+      .makeMoves(
+        moves,
+        Head.StartPosition,
+        Range.inclusive(1, 9).toList.map(i => Tail.StartPosition.copy(id = i))
+      )
 
     rb.uniqueTailPositions shouldBe 36
   }

@@ -4,7 +4,7 @@ import common.AdventProblemSolution
 
 import scala.annotation.tailrec
 
-object Solution extends AdventProblemSolution[Int, Long]{
+object Solution extends AdventProblemSolution[Int, Long] {
 
   override def part1(args: List[String]): Int = {
     val beaconZone: BeaconZone = BeaconZone(args.flatMap(SensorBeaconPair.fromString))
@@ -20,7 +20,7 @@ object Solution extends AdventProblemSolution[Int, Long]{
       if (y >= 4000000) None // break as y limit has reached
       val currRanges: List[YCoordinateRange] = beaconZone.rangesWithoutDistressSignal(y)
       CoordinateRangeUtils.modifyRangesWithLimits(currRanges, 0, 4000000) match {
-        case r if r.length < 2 => calc(y+1) // no gaps found. Move to next y value
+        case r if r.length < 2 => calc(y + 1) // no gaps found. Move to next y value
         case _ :: tail :: _ => {
           println(s"Distress signal identified to be coming from (${tail.xStart - 1}, ${y})")
           Some(Coordinate(tail.xStart - 1, y))
@@ -28,6 +28,6 @@ object Solution extends AdventProblemSolution[Int, Long]{
       }
     }
 
-    calc(0).map(c => (4000000L * c.x) + c.y ).getOrElse(-1L)
+    calc(0).map(c => (4000000L * c.x) + c.y).getOrElse(-1L)
   }
 }

@@ -3,7 +3,7 @@ package day2
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ResultActionSpec extends  AnyFlatSpec with Matchers {
+class ResultActionSpec extends AnyFlatSpec with Matchers {
   "PlayConfig.constructAction" should "return None if it cannot construct" in {
     val config = ResultConfig(win = 'A', lose = 'B', draw = 'C')
 

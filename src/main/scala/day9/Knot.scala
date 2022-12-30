@@ -1,21 +1,20 @@
 package day9
 
-
 trait Knot[T] {
   def pos: Position
 
   def move(move: Move): T
 
   protected def newPosition(move: Move): Position = move match {
-    case _: MoveUp => pos.copy(y = pos.y + 1)
-    case _: MoveDown => pos.copy(y = pos.y - 1)
-    case _: MoveLeft => pos.copy(x = pos.x - 1)
-    case _: MoveRight => pos.copy(x = pos.x + 1)
-    case _: MoveDiagonalRightUp => pos.copy(x = pos.x + 1, y = pos.y + 1)
+    case _: MoveUp                => pos.copy(y = pos.y + 1)
+    case _: MoveDown              => pos.copy(y = pos.y - 1)
+    case _: MoveLeft              => pos.copy(x = pos.x - 1)
+    case _: MoveRight             => pos.copy(x = pos.x + 1)
+    case _: MoveDiagonalRightUp   => pos.copy(x = pos.x + 1, y = pos.y + 1)
     case _: MoveDiagonalRightDown => pos.copy(x = pos.x + 1, y = pos.y - 1)
-    case _: MoveDiagonalLeftDown => pos.copy(x = pos.x - 1, y = pos.y - 1)
-    case _: MoveDiagonalLeftUp => pos.copy(x = pos.x - 1, y = pos.y + 1)
-    case _ => pos // returns the same position
+    case _: MoveDiagonalLeftDown  => pos.copy(x = pos.x - 1, y = pos.y - 1)
+    case _: MoveDiagonalLeftUp    => pos.copy(x = pos.x - 1, y = pos.y + 1)
+    case _                        => pos // returns the same position
   }
 }
 
@@ -41,7 +40,7 @@ object Tail {
   lazy val StartPosition: Tail = Tail(Position(0, 0))
 }
 
-case class RopeBridge (moves: List[MoveHistory]) {
+case class RopeBridge(moves: List[MoveHistory]) {
 
   lazy val head: Head = moves.lastOption.map(_.head).getOrElse(Head.StartPosition)
 
@@ -54,4 +53,3 @@ case class RopeBridge (moves: List[MoveHistory]) {
   }
 
 }
-

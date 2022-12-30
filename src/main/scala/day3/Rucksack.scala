@@ -4,46 +4,45 @@ import scala.annotation.tailrec
 
 case class Rucksack(firstCompartment: List[Char], secondCompartment: List[Char]) extends Group {
 
-  /**
-   * Returns items which are present in both the compartments
-   */
+  /** Returns items which are present in both the compartments
+    */
   lazy val duplicatedItems: List[Char] = listMatcher(firstCompartment, List(secondCompartment))
 
   lazy val allItems: List[Char] = firstCompartment ++ secondCompartment
 }
 
-object  Rucksack {
+object Rucksack {
 
-  /**
-   * Tries to construct a rucksack from an input string. Returns a None if an invalid string is passed
-   *
-   * @param str if vJrwpWtwJgWrhcsFMMfFFhFp is passed then it will return
-   * @return
-   */
+  /** Tries to construct a rucksack from an input string. Returns a None if an invalid string is
+    * passed
+    *
+    * @param str
+    *   if vJrwpWtwJgWrhcsFMMfFFhFp is passed then it will return
+    * @return
+    */
   def constructFromString(str: String): Option[Rucksack] = {
 
-    /**
-     * Tail recursive function which checks if the list of characters only contains lower case or
-     * upper case characters
-     * @param s
-     * @return
-     */
+    /** Tail recursive function which checks if the list of characters only contains lower case or
+      * upper case characters
+      * @param s
+      * @return
+      */
     @tailrec
     def isValidStr(s: List[Char]): Boolean = s match {
       case Nil => true
-      case head :: tail => head.toInt match {
-        case i if ((i>=65 && i<=90) || (i >= 97 && i <= 122)) => isValidStr(tail)
-        case _ => false
-      }
+      case head :: tail =>
+        head.toInt match {
+          case i if ((i >= 65 && i <= 90) || (i >= 97 && i <= 122)) => isValidStr(tail)
+          case _                                                    => false
+        }
     }
-
 
     if (str.isEmpty || str.length % 2 == 1)
       None // Here it means the input is empty or there aren't event elements to equally distribute items
     else {
       (str.toList.take(str.length / 2), str.toList.drop(str.length / 2)) match {
         case (a, b) if (isValidStr(a) && isValidStr(b)) => Some(Rucksack(a, b))
-        case  _ => None
+        case _                                          => None
       }
     }
   }

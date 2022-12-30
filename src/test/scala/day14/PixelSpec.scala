@@ -9,7 +9,7 @@ class PixelSpec extends AnyFlatSpec with Matchers {
 
     // line to the top
 
-    Position(10,10).drawLine(Position(10, 13)) shouldEqual List(
+    Position(10, 10).drawLine(Position(10, 13)) shouldEqual List(
       Position(10, 11),
       Position(10, 12),
       Position(10, 13)
@@ -30,14 +30,12 @@ class PixelSpec extends AnyFlatSpec with Matchers {
     result3.contains(Position(12, 10)) shouldEqual true
     result3.contains(Position(13, 10)) shouldEqual true
 
-
     // line to the left
     val result4 = Position(10, 10).drawLine(Position(7, 10))
     result4.length shouldEqual 3
     result4.contains(Position(9, 10)) shouldEqual true
     result4.contains(Position(8, 10)) shouldEqual true
     result4.contains(Position(7, 10)) shouldEqual true
-
 
   }
 

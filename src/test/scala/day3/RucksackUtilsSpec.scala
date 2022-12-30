@@ -3,7 +3,7 @@ package day3
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class RucksackUtilsSpec extends  AnyFlatSpec with Matchers {
+class RucksackUtilsSpec extends AnyFlatSpec with Matchers {
 
   "Rucksackutils.itemScore" should "return the expected score for lower case elements" in {
     RucksackUtils.itemScore('a') shouldEqual 1

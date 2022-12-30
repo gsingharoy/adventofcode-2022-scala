@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 
 class MoveSpec extends AnyFlatSpec with Matchers {
 
-  "Move.fromString" should "be able to construct up parameters" in  {
+  "Move.fromString" should "be able to construct up parameters" in {
     Move.fromString("U 2") shouldEqual List(MoveUp(), MoveUp())
   }
 
