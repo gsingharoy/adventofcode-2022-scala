@@ -15,11 +15,16 @@ trait OSFile {
 
 object OSFile {
 
-  def constructFromString(currPath: OSPath, str: String): Option[OSFile] = str.split(" ").toList match {
-    case l if l.length != 2 => None
-    case head1 :: head2 :: _ => head1 match {
-      case "dir" => Some(Directory(path = currPath, name = head2))
-      case h => h.toIntOption.map(i => DataFile(name = head2,size = i, path = currPath))
+  def constructFromString(currPath: OSPath, str: String): Option[OSFile] = str match {
+      case s"dir ${dir}" => Some(Directory(path = currPath, name = dir))
+      case s"${size} ${name}" => size.toIntOption.map(si=> DataFile(name = name,size = si, path = currPath))
+      case _ => None
     }
-  }
 }
+
+case class DataFile(name: String,
+                    size: Int,
+                    path: OSPath) extends OSFile
+
+case class Directory(name: String,
+                     path: OSPath) extends OSFile
