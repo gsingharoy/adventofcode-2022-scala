@@ -1,9 +1,5 @@
 package day11
 
-import day9.Move
-
-import scala.collection.SeqView.Sorted
-
 /**
  * Represents a monkey
  *
