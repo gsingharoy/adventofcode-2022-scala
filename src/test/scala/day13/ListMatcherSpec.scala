@@ -80,5 +80,4 @@ class ListMatcherSpec extends AnyFlatSpec with Matchers {
 
   }
 
-
 }

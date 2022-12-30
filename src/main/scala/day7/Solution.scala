@@ -2,7 +2,7 @@ package day7
 
 import common.AdventProblemSolution
 
-object Solution extends AdventProblemSolution[Int, Int]{
+object Solution extends AdventProblemSolution[Int, Int] {
   override def part1(args: List[String]): Int = {
     // construct all files
     val allFiles = CommandUtils.constructDirectoryList(args)
@@ -16,10 +16,12 @@ object Solution extends AdventProblemSolution[Int, Int]{
     val directorySizes = CommandUtils.directoriesWithSizes(allFiles)
 
     // total size of all the files which is occuppied
-    val totalSizeOccupied = allFiles.map({
-      case d: DataFile => d.size
-      case _ => 0
-    }).sum
+    val totalSizeOccupied = allFiles
+      .map({
+        case d: DataFile => d.size
+        case _           => 0
+      })
+      .sum
 
     // return the minimum size of the directory to be deleted
     directorySizes

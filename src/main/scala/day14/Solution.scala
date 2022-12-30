@@ -4,7 +4,7 @@ import common.AdventProblemSolution
 
 import scala.annotation.tailrec
 
-object Solution extends AdventProblemSolution[Int, Int]{
+object Solution extends AdventProblemSolution[Int, Int] {
   override def part1(args: List[String]): Int = {
     val reservoir = Reservoir.fromStrings(args)
 
@@ -27,7 +27,7 @@ object Solution extends AdventProblemSolution[Int, Int]{
   private def fillSand(r: Reservoir): Reservoir = r.newReservoirWithASandUnit match {
     case Some(nr) => {
       if (nr.totalSandUnits % 100 == 0)
-      println(s"Completed Sand unit # ${nr.totalSandUnits}")
+        println(s"Completed Sand unit # ${nr.totalSandUnits}")
       fillSand(nr)
     }
     case None => r

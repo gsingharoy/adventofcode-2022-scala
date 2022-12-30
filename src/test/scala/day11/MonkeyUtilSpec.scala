@@ -1,6 +1,6 @@
 package day11
 
-import common.{ ListUtils, FileUtils }
+import common.{ListUtils, FileUtils}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -20,7 +20,10 @@ class MonkeyUtilSpec extends AnyFlatSpec with Matchers {
     resultMonkeys.find(_.id == 0).get.items shouldEqual List.empty
     resultMonkeys.find(_.id == 1).get.items shouldEqual monkeys.find(_.id == 1).get.items
     resultMonkeys.find(_.id == 2).get.items shouldEqual monkeys.find(_.id == 2).get.items
-    resultMonkeys.find(_.id == 3).get.items shouldEqual monkeys.find(_.id == 3).get.items ++ List(500, 620)
+    resultMonkeys.find(_.id == 3).get.items shouldEqual monkeys.find(_.id == 3).get.items ++ List(
+      500,
+      620
+    )
   }
 
   "MonkeyUtil.completeRound" should "be able to make all the moves in a round for all the monkeys" in {
@@ -75,7 +78,6 @@ class MonkeyUtilSpec extends AnyFlatSpec with Matchers {
 
     MonkeyUtils.calculateMoneeyBusiness(monkeys, 20) shouldEqual Some(10605)
   }
-
 
 //  "MonkeyUtil.completeInspection" should "be able to make all the moves in all the rounds after removing the worry divider" in {
 //    val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")

@@ -11,14 +11,14 @@ class CrateStackUtilsSpec extends AnyFlatSpec with Matchers {
     val cs3 = CrateStack(3, List('P'))
 
     val crateList1 = List(cs1, cs2, cs3)
-    val move1 = MoveAction(sourceStack = 2, sinkStack = 1, moveUnits = 1)
+    val move1      = MoveAction(sourceStack = 2, sinkStack = 1, moveUnits = 1)
 
     val resultCrates1 = CrateStackUtils.moveItems(move1, crateList1).get.sorted
 
     resultCrates1 shouldEqual List(
-      CrateStack(1,List('D', 'N', 'Z')),
-      CrateStack(2,List('C', 'M')),
-      CrateStack(3,List('P'))
+      CrateStack(1, List('D', 'N', 'Z')),
+      CrateStack(2, List('C', 'M')),
+      CrateStack(3, List('P'))
     )
 
     val move2 = MoveAction(sourceStack = 1, sinkStack = 3, moveUnits = 3)
@@ -77,6 +77,8 @@ class CrateStackUtilsSpec extends AnyFlatSpec with Matchers {
   }
 
   "CrateStackUtils.formStackNumbers" should "form the correct stack numbers" in {
-    CrateStackUtils.formStackNumbers(" 1   2   3   4   5   6   7   8   9 ") shouldEqual Range.inclusive(1,9).toList
+    CrateStackUtils.formStackNumbers(" 1   2   3   4   5   6   7   8   9 ") shouldEqual Range
+      .inclusive(1, 9)
+      .toList
   }
 }

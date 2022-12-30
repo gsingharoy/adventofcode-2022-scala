@@ -4,7 +4,8 @@ import common.{AdventProblemSolution, ListUtils}
 
 object Solution extends AdventProblemSolution[Int, Int] {
   override def part1(args: List[String]): Int = {
-    val inputTuples = ListUtils.zipListByPivotValue(args, "").flatMap(ListUtils.transformToTuplePair)
+    val inputTuples =
+      ListUtils.zipListByPivotValue(args, "").flatMap(ListUtils.transformToTuplePair)
     indicesInRightOrder(inputTuples).sum
   }
 
@@ -17,8 +18,8 @@ object Solution extends AdventProblemSolution[Int, Int] {
 
     // Sorting the packets so they all are in order
     val sortedPackets: List[String] = allLists.sortWith(ListMatcher.compareStrLists)
-    val divider1Index: Int = sortedPackets.indexOf(divider1) + 1
-    val divider2Index: Int = sortedPackets.indexOf(divider2) + 1
+    val divider1Index: Int          = sortedPackets.indexOf(divider1) + 1
+    val divider2Index: Int          = sortedPackets.indexOf(divider2) + 1
 
     println(s"Found divider 1: ${divider1} at index ${divider1Index}")
     println(s"Found divider 1: ${divider2} at index ${divider2Index}")

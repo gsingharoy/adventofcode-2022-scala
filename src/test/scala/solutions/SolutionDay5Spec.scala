@@ -19,7 +19,7 @@ class SolutionDay5Spec extends AnyFlatSpec with Matchers {
   "Day 5 : Part two" should "be able to find the top most crates in each stack when using an advanced 9001 crane" in {
     val args = FileUtils.readFile("day5/input")
 
-    Solution.part2(args)shouldEqual "ZFSJBPRFP"
+    Solution.part2(args) shouldEqual "ZFSJBPRFP"
 
   }
 

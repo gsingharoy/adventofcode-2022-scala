@@ -5,7 +5,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class ElfSpec extends AnyFlatSpec with Matchers {
-  "Elf#totalCalories" should "return the sum of all calories it is carrying" in  {
+  "Elf#totalCalories" should "return the sum of all calories it is carrying" in {
     Elf(List[Int]()).totalCalories shouldEqual 0
 
     Elf(List(200, 4000, 78)).totalCalories shouldEqual 4278

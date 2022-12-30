@@ -4,7 +4,7 @@ import common.FileUtils
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ForestSpec extends AnyFlatSpec with Matchers  {
+class ForestSpec extends AnyFlatSpec with Matchers {
   "Forest.constructFromStrings" should "be able to construct the tree from a sample example" in {
     val args = FileUtils.readFile("day8/sample")
 
@@ -17,7 +17,6 @@ class ForestSpec extends AnyFlatSpec with Matchers  {
     val args = FileUtils.readFile("day8/sample")
 
     val forest = Forest.constructFromStrings(args)
-
 
     val t00: Tree = forest.trees.find(t => t.col == 0 && t.row == 0).get
     val t44: Tree = forest.trees.find(t => t.col == 4 && t.row == 4).get
@@ -32,7 +31,6 @@ class ForestSpec extends AnyFlatSpec with Matchers  {
     val args = FileUtils.readFile("day8/sample")
 
     val forest = Forest.constructFromStrings(args)
-
 
     val t11: Tree = forest.trees.find(t => t.col == 1 && t.row == 1).get
     val t12: Tree = forest.trees.find(t => t.col == 2 && t.row == 1).get
@@ -54,7 +52,6 @@ class ForestSpec extends AnyFlatSpec with Matchers  {
     val args = FileUtils.readFile("day8/sample")
 
     val forest = Forest.constructFromStrings(args)
-
 
     val t12: Tree = forest.trees.find(t => t.col == 2 && t.row == 1).get
 

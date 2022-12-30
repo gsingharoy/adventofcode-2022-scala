@@ -3,7 +3,7 @@ package day3
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class RucksackGroupSpec extends  AnyFlatSpec with Matchers {
+class RucksackGroupSpec extends AnyFlatSpec with Matchers {
   "RucksackGroup#duplicatedItems" should "return the expected duplicated items in three ruck sacks" in {
     val rucksack1: Rucksack = Rucksack.constructFromString("vJrwpWtwJgWrhcsFMMfFFhFp").get
     val rucksack2: Rucksack = Rucksack.constructFromString("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL").get

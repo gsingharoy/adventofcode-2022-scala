@@ -55,7 +55,7 @@ class MonkeySpec extends AnyFlatSpec with Matchers {
 
     mop1.calc(10) shouldEqual 16
     mop1.calc(20) shouldEqual 26
-    mop1.calc(100) shouldEqual(106)
+    mop1.calc(100) shouldEqual (106)
 
     val mop2 = MonkeyOperation.fromString("  Operation: new = old * old").get
 
@@ -90,7 +90,7 @@ class MonkeySpec extends AnyFlatSpec with Matchers {
   }
 
   "Monkey.fromString" should "be able to form multiple monkeys from the input file format" in {
-    val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"),"")
+    val args = ListUtils.zipListByPivotValue(FileUtils.readFile("day11/sample"), "")
 
     val monkeys = args.map(Monkey.fromStrings(_))
 

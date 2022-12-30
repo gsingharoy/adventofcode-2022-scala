@@ -8,9 +8,8 @@ object Move {
   def fromString(str: String): List[Move] = {
 
     def buildMoves[T <: Move](units: String, move: T): List[T] =
-      units
-        .toIntOption
-        .map(i=> Range.inclusive(1, i).toList.map(_ => move))
+      units.toIntOption
+        .map(i => Range.inclusive(1, i).toList.map(_ => move))
         .getOrElse(List[T]())
 
     str match {
@@ -18,10 +17,9 @@ object Move {
       case s"U ${u}" => buildMoves[MoveUp](u, MoveUp())
       case s"D ${u}" => buildMoves[MoveDown](u, MoveDown())
       case s"L ${u}" => buildMoves[MoveLeft](u, MoveLeft())
-      case _ => List.empty
+      case _         => List.empty
     }
   }
-
 
 }
 
@@ -40,6 +38,5 @@ case class MoveDiagonalRightDown() extends Move
 case class MoveDiagonalLeftUp() extends Move
 
 case class MoveDiagonalLeftDown() extends Move
-
 
 case class MoveHistory(head: Head, tails: List[Tail])

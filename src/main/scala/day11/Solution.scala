@@ -2,7 +2,7 @@ package day11
 
 import common.{AdventProblemSolution, ListUtils}
 
-object Solution extends AdventProblemSolution[BigInt, BigInt]{
+object Solution extends AdventProblemSolution[BigInt, BigInt] {
 
   override def part1(args: List[String]): BigInt = {
     val zippedArgs = ListUtils.zipListByPivotValue(args, "")

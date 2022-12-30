@@ -2,7 +2,7 @@ package day4
 
 import common.AdventProblemSolution
 
-object Solution extends AdventProblemSolution[Int, Int]{
+object Solution extends AdventProblemSolution[Int, Int] {
 
   override def part1(args: List[String]): Int = {
     val assignments: List[Assignment] = args.flatMap(Assignment.constructFromString)

@@ -26,5 +26,5 @@ class CathodeRayUtilsSpec extends AnyFlatSpec with Matchers {
     CathodeRayUtils.findSignalStrength(220, resultCycles) shouldEqual 3960
 
   }
-  
+
 }

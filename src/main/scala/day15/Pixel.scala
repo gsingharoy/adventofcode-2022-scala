@@ -1,10 +1,8 @@
 package day15
 
-
 trait Pixel[T] extends Ordered[Pixel[T]] {
   def pos: Coordinate
   def char: Char
-
 
   def compare(that: Pixel[T]): Int = this.pos compare that.pos
 }
@@ -32,8 +30,3 @@ case class BeaconExclusionPoint(pos: Coordinate) extends Pixel[BeaconExclusionPo
 object BeaconExclusionPoint {
   val char: Char = '#'
 }
-
-
-
-
-
