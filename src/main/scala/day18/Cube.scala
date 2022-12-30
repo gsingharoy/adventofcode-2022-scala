@@ -2,34 +2,19 @@ package day18
 
 import scala.annotation.tailrec
 
-case class Cube(origin: (Int, Int, Int), edge: Int = 1) {
+case class Cube(origin: (Int, Int, Int)) {
 
   private lazy val sides: List[List[(Int, Int, Int)]] = {
     val x = origin._1
     val y = origin._2
     val z = origin._3
     List(
-      List((x, y, z), (x + edge, y, z), (x + edge, y, z + edge), (x, y, z + edge)).sorted,
-      List(
-        (x + edge, y, z),
-        (x + edge, y + edge, z),
-        (x + edge, y + edge, z + edge),
-        (x + edge, y, z + edge)
-      ).sorted,
-      List(
-        (x + edge, y + edge, z),
-        (x, y + edge, z),
-        (x, y + edge, z + edge),
-        (x + edge, y + edge, z + edge)
-      ).sorted,
-      List((x, y + edge, z), (x, y, z), (x, y, z + edge), (x, y + edge, z + edge)).sorted,
-      List(
-        (x, y, z + edge),
-        (x + edge, y, z + edge),
-        (x + edge, y + edge, z + edge),
-        (x, y + edge, z + edge)
-      ).sorted,
-      List((x, y, z), (x + edge, y, z), (x + edge, y + edge, z), (x, y + edge, z)).sorted
+      List((x, y, z), (x + 1, y, z), (x + 1, y, z + 1), (x, y, z + 1)).sorted,
+      List((x + 1, y, z), (x + 1, y + 1, z), (x + 1, y + 1, z + 1), (x + 1, y, z + 1)).sorted,
+      List((x + 1, y + 1, z), (x, y + 1, z), (x, y + 1, z + 1), (x + 1, y + 1, z + 1)).sorted,
+      List((x, y + 1, z), (x, y, z), (x, y, z + 1), (x, y + 1, z + 1)).sorted,
+      List((x, y, z + 1), (x + 1, y, z + 1), (x + 1, y + 1, z + 1), (x, y + 1, z + 1)).sorted,
+      List((x, y, z), (x + 1, y, z), (x + 1, y + 1, z), (x, y + 1, z)).sorted
     )
   }
 
@@ -38,9 +23,9 @@ case class Cube(origin: (Int, Int, Int), edge: Int = 1) {
     // condition if we know the origin is more than the unit of edge
 
     if (
-      (this.origin._1 - that.origin._1).abs > edge + 2 ||
-      (this.origin._2 - that.origin._2).abs > edge + 2 ||
-      (this.origin._2 - that.origin._2).abs > edge + 2
+      (this.origin._1 - that.origin._1).abs > 2 ||
+      (this.origin._2 - that.origin._2).abs > 2 ||
+      (this.origin._2 - that.origin._2).abs > 2
     )
       return false // do not even attempt to match. The cube is too far away
 

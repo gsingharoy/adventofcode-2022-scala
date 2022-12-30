@@ -51,7 +51,7 @@ object GameAction {
       opponentConfig: PlayConfig,
       yourConfig: PlayConfig
   ): Option[GameAction] =
-    safeStringMatch[PlayConfig, PlayConfig](i, opponentConfig, yourConfig)((i, oc, yc) =>
+    safeStringMatch[PlayConfig](i, opponentConfig, yourConfig)((i, oc, yc) =>
       (
         PlayAction.constructAction(i.charAt(0), oc),
         PlayAction.constructAction(i.charAt(2), yc)
@@ -75,7 +75,7 @@ object GameAction {
       opponentConfig: PlayConfig,
       yourResultConfig: ResultConfig
   ): Option[GameAction] =
-    safeStringMatch[PlayConfig, ResultConfig](i, opponentConfig, yourResultConfig)((i, oc, yc) =>
+    safeStringMatch[ResultConfig](i, opponentConfig, yourResultConfig)((i, oc, yc) =>
       (
         PlayAction.constructAction(i.charAt(0), oc),
         ResultAction.constructAction(i.charAt(2), yc)
@@ -85,8 +85,8 @@ object GameAction {
       }
     )
 
-  private def safeStringMatch[X, Y](i: String, opponentConfig: X, yourConfig: Y)(
-      f: (String, X, Y) => Option[GameAction]
+  private def safeStringMatch[Y](i: String, opponentConfig: PlayConfig, yourConfig: Y)(
+      f: (String, PlayConfig, Y) => Option[GameAction]
   ): Option[GameAction] =
     if (i.length != 3) None
     else f(i, opponentConfig, yourConfig)
