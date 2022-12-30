@@ -29,7 +29,7 @@ case class ListElem(elem: String,
 
 object ListElem {
 
-  def root(elem: String): ListElem = ListElem(elem, ListElemPosition.Start)
+  def root(elem: String): ListElem = ListElem(elem, ListElemPosition.Root)
   /**
    * Breaks the string in such parts that each element is either in a bracket or is a full set in itself
    *
@@ -54,8 +54,6 @@ object ListElem {
 
     f(str.toList, List.empty, 0, List.empty)
   }
-  def isSingleList(str: String): Boolean = breakStr(str).length <= 1
-
   def removeBrackets(str: String): String = str match {
     case s"[${s}]" if isInSingleBracket(str) => s
     case s => s
@@ -109,13 +107,9 @@ case class ListElemPosition(depth: String, breadth: Int) {
     case "" => s"${breadth}"
     case d => (d.split("/").toList :+ s"${breadth}").mkString("/")
   }
-
-  lazy val isRootPosition: Boolean = this == ListElemPosition.Start
 }
 
 object  ListElemPosition {
 
-
-
-  val Start: ListElemPosition = ListElemPosition("", 0)
+  val Root: ListElemPosition = ListElemPosition("", 0)
 }

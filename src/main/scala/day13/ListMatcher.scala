@@ -152,7 +152,7 @@ object ListMatcher {
           if (counter >= 10)
             throw new RuntimeException(s"Could not figure out a solution after ${counter} retries")
           addedEvaluation = false
-          (depthF(leftStr, rightStr, ListElemPosition.Start), evaluatedElements.contains(ListElemPosition.Start)) match {
+          (depthF(leftStr, rightStr, ListElemPosition.Root), evaluatedElements.contains(ListElemPosition.Root)) match {
             case (0, false) => exec(counter + 1)
             case (0, true) => true // ran out of elements to compare on the left side
             case (result, _) => result > 0

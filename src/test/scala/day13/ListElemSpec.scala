@@ -42,16 +42,16 @@ class ListElemSpec extends AnyFlatSpec with Matchers {
 
 
   "ListElem#children" should "return the correct children" in {
-    ListElem("[[1],[2,3,4]]", ListElemPosition.Start)
+    ListElem("[[1],[2,3,4]]", ListElemPosition.Root)
       .children shouldEqual List(
       ListElem("[1]", ListElemPosition("0", 0)),
       ListElem("[2,3,4]", ListElemPosition("0", 1))
     )
 
-    ListElem("1,[3,7]", ListElemPosition.Start)
+    ListElem("1,[3,7]", ListElemPosition.Root)
       .children shouldEqual List.empty
 
-    ListElem("[1,[3,7]]", ListElemPosition.Start)
+    ListElem("[1,[3,7]]", ListElemPosition.Root)
       .children shouldEqual List(
       ListElem("1", ListElemPosition("0", 0)),
       ListElem("[3,7]", ListElemPosition("0", 1))
@@ -70,7 +70,7 @@ class ListElemSpec extends AnyFlatSpec with Matchers {
 
     ListElem("[]", ListElemPosition("0/1", 3)).children shouldEqual List.empty
 
-    ListElem("[[[[],8],1]]", ListElemPosition.Start).children shouldEqual List(
+    ListElem("[[[[],8],1]]", ListElemPosition.Root).children shouldEqual List(
       ListElem("[[[],8],1]", ListElemPosition("0", 0))
     )
   }
@@ -84,7 +84,7 @@ class ListElemSpec extends AnyFlatSpec with Matchers {
 
     "ListElemPosition#childDepth" should "return the correct children's depth" in {
       ListElemPosition("0/1/10/20", 3).childDepth shouldEqual "0/1/10/20/3"
-      ListElemPosition.Start.childDepth shouldEqual "0"
+      ListElemPosition.Root.childDepth shouldEqual "0"
     }
 
 }
